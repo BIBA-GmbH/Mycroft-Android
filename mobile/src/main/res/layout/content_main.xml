@@ -19,6 +19,7 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -71,33 +72,46 @@
             android:id="@+id/micButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:background="@android:color/transparent"
-            android:src="@drawable/ic_mycroft"
-            android:contentDescription="@string/speech_prompt" />
+            android:contentDescription="@string/speech_prompt"
+            android:src="@drawable/ic_mycroft" />
 
         <EditText
             android:id="@+id/utteranceInput"
-            android:visibility="invisible"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_toEndOf="@id/kbMicSwitch"
             android:layout_toStartOf="@id/sendUtterance"
-            android:inputType="textShortMessage" />
+            android:layout_toEndOf="@id/kbMicSwitch"
+            android:inputType="textShortMessage"
+            android:visibility="invisible" />
 
         <ImageButton
             android:id="@+id/sendUtterance"
-            android:visibility="invisible"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_margin="4dp"
             android:background="@android:color/transparent"
+            android:contentDescription="@string/send_utterance"
             android:src="@drawable/ic_send_black_24dp"
-            android:contentDescription="@string/send_utterance" />
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/scanButton"
+            android:layout_width="64dp"
+            android:layout_height="48dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="48dp"
+            android:layout_marginEnd="52dp"
+            android:layout_marginBottom="144dp"
+            android:layout_toEndOf="@+id/micButton"
+            app:srcCompat="@drawable/qr_code"
+            tools:srcCompat="@drawable/qr_code" />
 
     </RelativeLayout>
 

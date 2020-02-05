@@ -35,8 +35,11 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 
 import com.crashlytics.android.Crashlytics
+import com.google.zxing.integration.android.IntentIntegrator
+import com.google.zxing.integration.android.IntentResult
 
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.exceptions.WebsocketNotConnectedException
@@ -64,6 +67,8 @@ class MainActivity : AppCompatActivity() {
     private val logTag = "Mycroft"
     private val utterances = mutableListOf<Utterance>()
     private val reqCodeSpeechInput = 100
+    private val reqCodeSpeechInputFromScan = 101
+
     private var maximumRetries = 1
     private var currentItemPosition = -1
 
@@ -80,6 +85,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var wearBroadcastReceiver: BroadcastReceiver
 
     var webSocketClient: WebSocketClient? = null
+
+    private var productID = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,11 +116,13 @@ class MainActivity : AppCompatActivity() {
                 micButton.visibility = View.VISIBLE
                 utteranceInput.visibility = View.INVISIBLE
                 sendUtterance.visibility = View.INVISIBLE
+                scanButton.visibility = View.VISIBLE
             } else {
                 // Switch to keyboard
                 micButton.visibility = View.INVISIBLE
                 utteranceInput.visibility = View.VISIBLE
                 sendUtterance.visibility = View.VISIBLE
+                scanButton.visibility = View.INVISIBLE
             }
         }
 
@@ -137,6 +146,8 @@ class MainActivity : AppCompatActivity() {
             // stop tts from speaking if app reader disabled
             if (!isChecked) ttsManager.initQueue("")
         }
+
+        scanButton.setOnClickListener { promptScanInput() }
 
         val llm = LinearLayoutManager(this)
         llm.stackFromEnd = true
@@ -355,7 +366,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Showing google speech input dialog
      */
-    private fun promptSpeechInput() {
+    private fun promptSpeechInput(fromScan: Boolean = false) {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
@@ -363,30 +374,74 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
                 getString(R.string.speech_prompt))
         try {
-            startActivityForResult(intent, reqCodeSpeechInput)
+            if (fromScan){
+                startActivityForResult(intent, reqCodeSpeechInputFromScan)
+            }else{
+                startActivityForResult(intent, reqCodeSpeechInput)
+            }
         } catch (a: ActivityNotFoundException) {
             showToast(getString(R.string.speech_not_supported))
         }
 
     }
 
+    private fun promptScanInput() {
+        //Toast.makeText(this, "This is the beginning point to scan qr code", Toast.LENGTH_LONG).show()
+        IntentIntegrator(this@MainActivity).initiateScan()
+        
+    }
+
     /**
-     * Receiving speech input
+     * Receiving speech or scan input
      */
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        when (requestCode) {
-            reqCodeSpeechInput -> {
-                if (resultCode == Activity.RESULT_OK && null != data) {
+        if(requestCode == 100) {
 
-                    val result = data
-                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            if (resultCode == Activity.RESULT_OK && null != data) {
 
-                    sendMessage(result[0])
-                }
+                val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+
+                sendMessage(result[0])
             }
         }
+
+        if(requestCode == IntentIntegrator.REQUEST_CODE) {
+
+            val result: IntentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+
+            if (resultCode == Activity.RESULT_OK && null != data) {
+
+                if (result.contents != null){
+
+                    Toast.makeText(this, result.contents, Toast.LENGTH_LONG).show()
+                    productID = result.contents
+                    promptSpeechInput(true)
+
+                }else{
+
+                    Toast.makeText(this, "Scan failed", Toast.LENGTH_LONG).show()
+
+                }
+
+
+            }
+        }
+
+        if(requestCode == 101) {
+
+            if (resultCode == Activity.RESULT_OK && null != data) {
+
+                val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                val query =  result[0] + " " + productID
+                Toast.makeText(this, query , Toast.LENGTH_LONG).show()
+                query.replace("?", " ")
+                sendMessage(query)
+            }
+        }
+
     }
 
     public override fun onDestroy() {
@@ -436,11 +491,15 @@ class MainActivity : AppCompatActivity() {
             micButton.visibility = View.VISIBLE
             utteranceInput.visibility = View.INVISIBLE
             sendUtterance.visibility = View.INVISIBLE
+            scanButton.visibility = View.VISIBLE
+
         } else {
             // Switch to keyboard
             micButton.visibility = View.INVISIBLE
             utteranceInput.visibility = View.VISIBLE
             sendUtterance.visibility = View.VISIBLE
+            scanButton.visibility = View.INVISIBLE
+
         }
 
         // set app reader setting
