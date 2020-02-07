@@ -68,6 +68,7 @@ class MainActivity : AppCompatActivity() {
     private val utterances = mutableListOf<Utterance>()
     private val reqCodeSpeechInput = 100
     private val reqCodeSpeechInputFromScan = 101
+    private var  productID = ""
 
     private var maximumRetries = 1
     private var currentItemPosition = -1
@@ -85,8 +86,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var wearBroadcastReceiver: BroadcastReceiver
 
     var webSocketClient: WebSocketClient? = null
-
-    private var productID = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -374,11 +373,7 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
                 getString(R.string.speech_prompt))
         try {
-            if (fromScan){
-                startActivityForResult(intent, reqCodeSpeechInputFromScan)
-            }else{
-                startActivityForResult(intent, reqCodeSpeechInput)
-            }
+            startActivityForResult(intent, reqCodeSpeechInput)
         } catch (a: ActivityNotFoundException) {
             showToast(getString(R.string.speech_not_supported))
         }
@@ -417,8 +412,21 @@ class MainActivity : AppCompatActivity() {
                 if (result.contents != null){
 
                     Toast.makeText(this, result.contents, Toast.LENGTH_LONG).show()
-                    productID = result.contents
-                    promptSpeechInput(true)
+                    productID = " " + result.contents
+                    Toast.makeText(this, productID, Toast.LENGTH_SHORT).show()
+
+
+                    val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                            getString(R.string.speech_prompt_after_scan))
+                    try {
+                        startActivityForResult(intent, reqCodeSpeechInputFromScan)
+                    } catch (a: ActivityNotFoundException) {
+                        showToast(getString(R.string.speech_not_supported))
+                    }
 
                 }else{
 
@@ -427,20 +435,25 @@ class MainActivity : AppCompatActivity() {
                 }
 
 
+                }
+
             }
-        }
 
         if(requestCode == 101) {
 
             if (resultCode == Activity.RESULT_OK && null != data) {
 
                 val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-                val query =  result[0] + " " + productID
-                Toast.makeText(this, query , Toast.LENGTH_LONG).show()
-                query.replace("?", " ")
+
+                // val productID = data.getStringExtra("productID")
+
+                val query = result[0].replace("?", " ") + productID
+
+
                 sendMessage(query)
             }
         }
+
 
     }
 
