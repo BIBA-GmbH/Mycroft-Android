@@ -21,12 +21,17 @@
 package mycroft.ai
 
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothHeadset
 import android.content.*
 import android.content.pm.PackageManager
+import android.media.AudioManager
+import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
+import android.provider.MediaStore
 import android.speech.RecognizerIntent
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
@@ -366,12 +371,23 @@ class MainActivity : AppCompatActivity() {
      * Showing google speech input dialog
      */
     private fun promptSpeechInput(fromScan: Boolean = false) {
+
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
                 getString(R.string.speech_prompt))
+
+        val mAudioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if(bluetoothAdapter != null
+                && bluetoothAdapter.isEnabled()
+                && bluetoothAdapter.getProfileConnectionState(BluetoothHeadset.HEADSET) == BluetoothHeadset.STATE_CONNECTED)
+        {
+            mAudioManager.startBluetoothSco()
+            //mAudioManager.setBluetoothScoOn(true)
+        }
         try {
             startActivityForResult(intent, reqCodeSpeechInput)
         } catch (a: ActivityNotFoundException) {
@@ -400,6 +416,8 @@ class MainActivity : AppCompatActivity() {
                 val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
 
                 sendMessage(result[0])
+                val mAudioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                mAudioManager.stopBluetoothSco()
             }
         }
 
