@@ -323,7 +323,7 @@ class MainActivity : AppCompatActivity() {
     private fun deriveURI(): URI? {
         return if (wsip.isNotEmpty()) {
             try {
-                URI("ws://$wsip:8181/core")
+                URI("ws://$wsip")
             } catch (e: URISyntaxException) {
                 Log.e(logTag, "Unable to build URI for websocket", e)
                 null
