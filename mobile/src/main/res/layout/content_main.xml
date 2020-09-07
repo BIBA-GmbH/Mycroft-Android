@@ -19,26 +19,46 @@
   -->
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/cardList"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/bgImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
+        android:src="@drawable/mycroft_big"
+        android:alpha="0.2"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cardList"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginTop="@dimen/card_list_margin_top"
-        android:layout_marginBottom="@dimen/card_list_margin_bottom"/>
+        android:layout_marginBottom="@dimen/card_list_margin_bottom" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/defaultMessageTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/action_section"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="80dp"
+        android:text="@string/landing_default_message"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
+        />
 
     <RelativeLayout
+        android:id="@+id/action_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -99,19 +119,6 @@
             android:contentDescription="@string/send_utterance"
             android:src="@drawable/ic_send_black_24dp"
             android:visibility="invisible" />
-
-        <ImageView
-            android:id="@+id/scanButton"
-            android:layout_width="64dp"
-            android:layout_height="48dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="48dp"
-            android:layout_marginEnd="52dp"
-            android:layout_marginBottom="144dp"
-            android:layout_toEndOf="@+id/micButton"
-            app:srcCompat="@drawable/qr_code"
-            tools:srcCompat="@drawable/qr_code" />
 
     </RelativeLayout>
 
