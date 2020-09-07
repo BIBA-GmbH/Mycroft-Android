@@ -28,18 +28,18 @@ import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
 import android.speech.RecognizerIntent
+import android.support.v4.content.LocalBroadcastManager
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.inputmethod.EditorInfo
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.widget.Toast
 
 import com.crashlytics.android.Crashlytics
+import com.google.zxing.integration.android.IntentIntegrator
+import com.google.zxing.integration.android.IntentResult
 
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.exceptions.WebsocketNotConnectedException
@@ -67,6 +67,8 @@ class MainActivity : AppCompatActivity() {
     private val logTag = "Mycroft"
     private val utterances = mutableListOf<Utterance>()
     private val reqCodeSpeechInput = 100
+    private val reqCodeSpeechInputFromScan = 101
+
     private var maximumRetries = 1
     private var currentItemPosition = -1
 
@@ -84,13 +86,14 @@ class MainActivity : AppCompatActivity() {
 
     var webSocketClient: WebSocketClient? = null
 
+    private var productID = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         Fabric.with(this, Crashlytics())
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar as Toolbar?)
-
+        setSupportActionBar(toolbar)
 
         loadPreferences()
 
@@ -113,24 +116,24 @@ class MainActivity : AppCompatActivity() {
                 micButton.visibility = View.VISIBLE
                 utteranceInput.visibility = View.INVISIBLE
                 sendUtterance.visibility = View.INVISIBLE
+                scanButton.visibility = View.VISIBLE
             } else {
                 // Switch to keyboard
                 micButton.visibility = View.INVISIBLE
                 utteranceInput.visibility = View.VISIBLE
                 sendUtterance.visibility = View.VISIBLE
+                scanButton.visibility = View.INVISIBLE
             }
         }
 
-        utteranceInput.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
-            if(actionId == EditorInfo.IME_ACTION_DONE){
-                sendUtterance()
-                true
-            } else {
-                false
-            }
-        })
         micButton.setOnClickListener { promptSpeechInput() }
-        sendUtterance.setOnClickListener { sendUtterance() }
+        sendUtterance.setOnClickListener {
+            val utterance = utteranceInput.text.toString()
+            if (utterance != "") {
+                sendMessage(utterance)
+                utteranceInput.text.clear()
+            }
+        }
 
         registerForContextMenu(cardList)
 
@@ -143,6 +146,8 @@ class MainActivity : AppCompatActivity() {
             // stop tts from speaking if app reader disabled
             if (!isChecked) ttsManager.initQueue("")
         }
+
+        scanButton.setOnClickListener { promptScanInput() }
 
         val llm = LinearLayoutManager(this)
         llm.stackFromEnd = true
@@ -194,7 +199,7 @@ class MainActivity : AppCompatActivity() {
             // Copy utterance to clipboard
             val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val data = ClipData.newPlainText("text", utterances[currentItemPosition].utterance)
-            clipboardManager.setPrimaryClip(data)
+            clipboardManager.primaryClip = data
             showToast("Copied to clipboard")
         } else if (item.itemId == R.id.mycroft_share) {
             // Share utterance
@@ -209,14 +214,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         return true
-    }
-
-    fun sendUtterance() {
-        val utterance = utteranceInput.text.toString()
-        if (utterance != "") {
-            sendMessage(utterance)
-            utteranceInput.text.clear()
-        }
     }
 
     fun connectWebSocket() {
@@ -252,7 +249,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun addData(mycroftUtterance: Utterance) {
         utterances.add(mycroftUtterance)
-        defaultMessageTextView.visibility = View.GONE
         mycroftAdapter.notifyItemInserted(utterances.size - 1)
         if (voxswitch.isChecked) {
             ttsManager.addQueue(mycroftUtterance.utterance)
@@ -327,7 +323,7 @@ class MainActivity : AppCompatActivity() {
     private fun deriveURI(): URI? {
         return if (wsip.isNotEmpty()) {
             try {
-                URI("ws://$wsip:8181/core")
+                URI("ws://$wsip")
             } catch (e: URISyntaxException) {
                 Log.e(logTag, "Unable to build URI for websocket", e)
                 null
@@ -370,7 +366,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Showing google speech input dialog
      */
-    private fun promptSpeechInput() {
+    private fun promptSpeechInput(fromScan: Boolean = false) {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
@@ -378,30 +374,74 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
                 getString(R.string.speech_prompt))
         try {
-            startActivityForResult(intent, reqCodeSpeechInput)
+            if (fromScan){
+                startActivityForResult(intent, reqCodeSpeechInputFromScan)
+            }else{
+                startActivityForResult(intent, reqCodeSpeechInput)
+            }
         } catch (a: ActivityNotFoundException) {
             showToast(getString(R.string.speech_not_supported))
         }
 
     }
 
+    private fun promptScanInput() {
+        //Toast.makeText(this, "This is the beginning point to scan qr code", Toast.LENGTH_LONG).show()
+        IntentIntegrator(this@MainActivity).initiateScan()
+        
+    }
+
     /**
-     * Receiving speech input
+     * Receiving speech or scan input
      */
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        when (requestCode) {
-            reqCodeSpeechInput -> {
-                if (resultCode == Activity.RESULT_OK && null != data) {
+        if(requestCode == 100) {
 
-                    val result = data
-                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            if (resultCode == Activity.RESULT_OK && null != data) {
 
-                    sendMessage(result[0])
-                }
+                val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+
+                sendMessage(result[0])
             }
         }
+
+        if(requestCode == IntentIntegrator.REQUEST_CODE) {
+
+            val result: IntentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+
+            if (resultCode == Activity.RESULT_OK && null != data) {
+
+                if (result.contents != null){
+
+                    Toast.makeText(this, result.contents, Toast.LENGTH_LONG).show()
+                    productID = result.contents
+                    promptSpeechInput(true)
+
+                }else{
+
+                    Toast.makeText(this, "Scan failed", Toast.LENGTH_LONG).show()
+
+                }
+
+
+            }
+        }
+
+        if(requestCode == 101) {
+
+            if (resultCode == Activity.RESULT_OK && null != data) {
+
+                val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                val query =  result[0] + " " + productID
+                Toast.makeText(this, query , Toast.LENGTH_LONG).show()
+                query.replace("?", " ")
+                sendMessage(query)
+            }
+        }
+
     }
 
     public override fun onDestroy() {
@@ -437,8 +477,8 @@ class MainActivity : AppCompatActivity() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
 
         // get mycroft-core ip address
-        wsip = sharedPref.getString("ip", "")!!
-        if (wsip!!.isEmpty()) {
+        wsip = sharedPref.getString("ip", "")
+        if (wsip.isEmpty()) {
             // eep, show the settings intent!
             startActivity(Intent(this, SettingsActivity::class.java))
         } else if (webSocketClient == null || webSocketClient!!.connection.isClosed) {
@@ -451,17 +491,21 @@ class MainActivity : AppCompatActivity() {
             micButton.visibility = View.VISIBLE
             utteranceInput.visibility = View.INVISIBLE
             sendUtterance.visibility = View.INVISIBLE
+            scanButton.visibility = View.VISIBLE
+
         } else {
             // Switch to keyboard
             micButton.visibility = View.INVISIBLE
             utteranceInput.visibility = View.VISIBLE
             sendUtterance.visibility = View.VISIBLE
+            scanButton.visibility = View.INVISIBLE
+
         }
 
         // set app reader setting
         voxswitch.isChecked = sharedPref.getBoolean("appReaderSwitch", true)
 
-        maximumRetries = Integer.parseInt(sharedPref.getString("maximumRetries", "1")!!)
+        maximumRetries = Integer.parseInt(sharedPref.getString("maximumRetries", "1"))
     }
 
     private fun checkIfLaunchedFromWidget(intent: Intent) {
@@ -474,7 +518,7 @@ class MainActivity : AppCompatActivity() {
 
             if (extras.containsKey(MYCROFT_WEAR_REQUEST_KEY_NAME)) {
                 Log.d(logTag, "checkIfLaunchedFromWidget - extras contain key:$MYCROFT_WEAR_REQUEST_KEY_NAME")
-                extras.getString(MYCROFT_WEAR_REQUEST_KEY_NAME)?.let { sendMessage(it) }
+                sendMessage(extras.getString(MYCROFT_WEAR_REQUEST_KEY_NAME))
                 getIntent().removeExtra(MYCROFT_WEAR_REQUEST_KEY_NAME)
             }
         }
