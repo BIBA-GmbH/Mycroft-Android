@@ -251,7 +251,9 @@ class MainActivity : AppCompatActivity() {
         utterances.add(mycroftUtterance)
         mycroftAdapter.notifyItemInserted(utterances.size - 1)
         if (voxswitch.isChecked) {
-            ttsManager.addQueue(mycroftUtterance.utterance)
+            if (!mycroftUtterance.silent) {
+                ttsManager.addQueue(mycroftUtterance.utterance)
+            }
         }
         cardList.smoothScrollToPosition(mycroftAdapter.itemCount - 1)
     }
