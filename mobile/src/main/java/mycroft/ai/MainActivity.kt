@@ -21,12 +21,17 @@
 package mycroft.ai
 
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothHeadset
 import android.content.*
 import android.content.pm.PackageManager
+import android.media.AudioManager
+import android.media.MediaRecorder
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
+import android.provider.MediaStore
 import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.Menu
@@ -67,6 +72,9 @@ class MainActivity : AppCompatActivity() {
     private val logTag = "Mycroft"
     private val utterances = mutableListOf<Utterance>()
     private val reqCodeSpeechInput = 100
+    private val reqCodeSpeechInputFromScan = 101
+    private var  productID = ""
+
     private var maximumRetries = 1
     private var currentItemPosition = -1
 
@@ -370,13 +378,24 @@ class MainActivity : AppCompatActivity() {
     /**
      * Showing google speech input dialog
      */
-    private fun promptSpeechInput() {
+    private fun promptSpeechInput(fromScan: Boolean = false) {
+
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
                 getString(R.string.speech_prompt))
+
+        val mAudioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if(bluetoothAdapter != null
+                && bluetoothAdapter.isEnabled()
+                && bluetoothAdapter.getProfileConnectionState(BluetoothHeadset.HEADSET) == BluetoothHeadset.STATE_CONNECTED)
+        {
+            mAudioManager.startBluetoothSco()
+            //mAudioManager.setBluetoothScoOn(true)
+        }
         try {
             startActivityForResult(intent, reqCodeSpeechInput)
         } catch (a: ActivityNotFoundException) {
@@ -395,13 +414,67 @@ class MainActivity : AppCompatActivity() {
             reqCodeSpeechInput -> {
                 if (resultCode == Activity.RESULT_OK && null != data) {
 
-                    val result = data
-                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+                val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+
+                sendMessage(result[0])
+                val mAudioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                mAudioManager.stopBluetoothSco()
+            }
+        }
+
+        if(requestCode == IntentIntegrator.REQUEST_CODE) {
+
+            val result: IntentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+
+            if (resultCode == Activity.RESULT_OK && null != data) {
+
+                if (result.contents != null){
+
+                    Toast.makeText(this, result.contents, Toast.LENGTH_LONG).show()
+                    productID = " " + result.contents
+                    Toast.makeText(this, productID, Toast.LENGTH_SHORT).show()
+
+
+                    val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                            RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+                    intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
+                            getString(R.string.speech_prompt_after_scan))
+                    try {
+                        startActivityForResult(intent, reqCodeSpeechInputFromScan)
+                    } catch (a: ActivityNotFoundException) {
+                        showToast(getString(R.string.speech_not_supported))
+                    }
+
+                }else{
+
+                    Toast.makeText(this, "Scan failed", Toast.LENGTH_LONG).show()
 
                     sendMessage(result[0])
                 }
+
+
+            }
+
+        }
+
+        if(requestCode == 101) {
+
+            if (resultCode == Activity.RESULT_OK && null != data) {
+
+                val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+
+                // val productID = data.getStringExtra("productID")
+
+                val query = result[0].replace("?", " ") + productID
+
+
+                sendMessage(query)
             }
         }
+
+
     }
 
     public override fun onDestroy() {
