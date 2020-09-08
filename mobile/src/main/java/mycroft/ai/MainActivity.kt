@@ -410,9 +410,9 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == 100) {
-
-            if (resultCode == Activity.RESULT_OK && null != data) {
+        when (requestCode) {
+            reqCodeSpeechInput -> {
+                if (resultCode == Activity.RESULT_OK && null != data) {
 
                 val result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
 
@@ -451,12 +451,13 @@ class MainActivity : AppCompatActivity() {
 
                     Toast.makeText(this, "Scan failed", Toast.LENGTH_LONG).show()
 
+                    sendMessage(result[0])
                 }
 
-
-                }
 
             }
+
+        }
 
         if(requestCode == 101) {
 
@@ -472,6 +473,8 @@ class MainActivity : AppCompatActivity() {
                 sendMessage(query)
             }
         }
+
+
     }
 
     public override fun onDestroy() {
