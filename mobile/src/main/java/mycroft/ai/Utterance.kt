@@ -23,4 +23,4 @@ package mycroft.ai
 /**
  * Data class representing a response from Mycroft or command from the user
  */
-data class Utterance(val utterance: String, val from: UtteranceFrom)
+data class Utterance(val utterance: String, val from: UtteranceFrom, val silent: Boolean = false)
