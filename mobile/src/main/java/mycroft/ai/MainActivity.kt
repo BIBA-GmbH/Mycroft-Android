@@ -46,8 +46,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.Toast
 
 import com.crashlytics.android.Crashlytics
-import com.google.zxing.integration.android.IntentIntegrator
-import com.google.zxing.integration.android.IntentResult
 
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.exceptions.WebsocketNotConnectedException
