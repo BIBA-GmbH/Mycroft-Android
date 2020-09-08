@@ -329,16 +329,13 @@ class MainActivity : AppCompatActivity() {
      * in a [URI] (e.g. because it's null), then
      * this method will return null.
      *
-     * If the user wants to connect to an IP
-     * the standard Mycroft port and path must be added e.g. 
-     * "ws://<desired IP>:8181/core"
      *
      * @return a valid uri, or null
      */
     private fun deriveURI(): URI? {
         return if (wsip.isNotEmpty()) {
             try {
-                URI("ws://$wsip")
+                URI("ws://$wsip:8181/core")
             } catch (e: URISyntaxException) {
                 Log.e(logTag, "Unable to build URI for websocket", e)
                 null
