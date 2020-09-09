@@ -254,7 +254,10 @@ class MainActivity : AppCompatActivity() {
         utterances.add(mycroftUtterance)
         defaultMessageTextView.visibility = View.GONE
         mycroftAdapter.notifyItemInserted(utterances.size - 1)
-        if (voxswitch.isChecked && !mycroftUtterance.silent) {
+
+        Log.d(logTag, "Utterance: [$mycroftUtterance]")
+
+        if (voxswitch.isChecked && !mycroftUtterance.silent && (mycroftUtterance.from.id == 1) ) {
             ttsManager.addQueue(mycroftUtterance.utterance)
         }
         cardList.smoothScrollToPosition(mycroftAdapter.itemCount - 1)
