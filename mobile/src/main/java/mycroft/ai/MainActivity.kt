@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var ttsManager: TTSManager
     private lateinit var mycroftAdapter: MycroftAdapter
-    private lateinit var wsip: String
+    private lateinit var wsct: String
     private lateinit var sharedPref: SharedPreferences
     private lateinit var networkChangeReceiver: NetworkChangeReceiver
     private lateinit var wearBroadcastReceiver: BroadcastReceiver
@@ -315,12 +315,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * This method will attach the correct path to the
-     * [.wsip] hostname to allow for communication
-     * with a Mycroft instance at that address.
+     * This method will use a client-specific token
+     * [.wsct] as path for communication
+     * with a Mycroft instance behind a reverse proxy.
      *
      *
-     * If [.wsip] cannot be used as a hostname
+     * If [.wsct] cannot be used as a hostname
      * in a [URI] (e.g. because it's null), then
      * this method will return null.
      *
@@ -328,11 +328,11 @@ class MainActivity : AppCompatActivity() {
      * @return a valid uri, or null
      */
     private fun deriveURI(): URI? {
-        return if (wsip.isNotEmpty()) {
+        return if (wsct.isNotEmpty()) {
             try {
-                URI("ws://$wsip")
+                URI("ws://diamond-dev.ikap.biba.uni-bremen.de/mycroft/$wsct")
             } catch (e: URISyntaxException) {
-                Log.e(logTag, "Unable to build URI for websocket", e)
+                Log.e(logTag, "Unable to connect to websocket with this token", e)
                 null
             }
         } else {
@@ -440,8 +440,8 @@ class MainActivity : AppCompatActivity() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
 
         // get mycroft-core ip address
-        wsip = sharedPref.getString("ip", "")!!
-        if (wsip!!.isEmpty()) {
+        wsct = sharedPref.getString("ip", "")!!
+        if (wsct!!.isEmpty()) {
             // eep, show the settings intent!
             startActivity(Intent(this, SettingsActivity::class.java))
         } else if (webSocketClient == null || webSocketClient!!.connection.isClosed) {
