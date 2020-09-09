@@ -41,8 +41,8 @@
     <string name="pref_title_display_name">Display name</string>
     <string name="pref_default_display_name">John Smith</string>
 
-    <string name="pref_title_default_ip">Mycroft IP address</string>
-    <string name="pref_default_display_ip">192.168.0.2</string>
+    <string name="pref_title_default_ip">Assistant client token</string>
+    <string name="pref_default_display_ip">Please insert your token here</string>
 
     <string name="pref_title_app_reader_switch">Voice Responses</string>
     <string name="pref_summary_app_reader_switch">enable TTS responses</string>
