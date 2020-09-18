@@ -23,10 +23,12 @@ package mycroft.ai
 import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
+import android.provider.MediaStore
 import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.Menu
@@ -38,35 +40,35 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-
 import com.crashlytics.android.Crashlytics
-
-import org.java_websocket.client.WebSocketClient
-import org.java_websocket.exceptions.WebsocketNotConnectedException
-import org.java_websocket.handshake.ServerHandshake
-
-import java.net.URI
-import java.net.URISyntaxException
-import java.util.Locale
-
+import com.google.mlkit.vision.barcode.Barcode
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import mycroft.ai.Constants.MycroftMobileConstants.VERSION_CODE_PREFERENCE_KEY
+import mycroft.ai.Constants.MycroftMobileConstants.VERSION_NAME_PREFERENCE_KEY
 import mycroft.ai.adapters.MycroftAdapter
 import mycroft.ai.receivers.NetworkChangeReceiver
 import mycroft.ai.shared.utilities.GuiUtilities
-import mycroft.ai.utils.NetworkUtil
-
-import mycroft.ai.Constants.MycroftMobileConstants.VERSION_CODE_PREFERENCE_KEY
-import mycroft.ai.Constants.MycroftMobileConstants.VERSION_NAME_PREFERENCE_KEY
 import mycroft.ai.shared.wear.Constants.MycroftSharedConstants.MYCROFT_WEAR_REQUEST
 import mycroft.ai.shared.wear.Constants.MycroftSharedConstants.MYCROFT_WEAR_REQUEST_KEY_NAME
 import mycroft.ai.shared.wear.Constants.MycroftSharedConstants.MYCROFT_WEAR_REQUEST_MESSAGE
+import mycroft.ai.utils.NetworkUtil
+import org.java_websocket.client.WebSocketClient
+import org.java_websocket.exceptions.WebsocketNotConnectedException
+import org.java_websocket.handshake.ServerHandshake
+import java.net.URI
+import java.net.URISyntaxException
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private val logTag = "Mycroft"
     private val utterances = mutableListOf<Utterance>()
     private val reqCodeSpeechInput = 100
+    private val reqImageCapture = 101
     private var maximumRetries = 1
     private var currentItemPosition = -1
 
@@ -131,6 +133,7 @@ class MainActivity : AppCompatActivity() {
         })
         micButton.setOnClickListener { promptSpeechInput() }
         sendUtterance.setOnClickListener { sendUtterance() }
+        scanButton.setOnClickListener { scanBarcode() }
 
         registerForContextMenu(cardList)
 
@@ -157,6 +160,19 @@ class MainActivity : AppCompatActivity() {
 
         // start the discovery activity (testing only)
         // startActivity(new Intent(this, DiscoveryActivity.class));
+    }
+
+    private fun scanBarcode() {
+        // Prepare the input image
+        dispatchTakePictureIntent()
+    }
+
+    private fun dispatchTakePictureIntent() {
+            Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                startActivityForResult(takePictureIntent, reqImageCapture)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -214,7 +230,12 @@ class MainActivity : AppCompatActivity() {
     fun sendUtterance() {
         val utterance = utteranceInput.text.toString()
         if (utterance != "") {
-            sendMessage(utterance)
+            val barcode = sharedPref.getString("barcode", null)
+            if (barcode != null) {
+                sendMessage(utterance + " " + barcode)
+            }else{
+                sendMessage(utterance)
+            }
             utteranceInput.text.clear()
         }
     }
@@ -396,15 +417,49 @@ class MainActivity : AppCompatActivity() {
 
         when (requestCode) {
             reqCodeSpeechInput -> {
-                if (resultCode == Activity.RESULT_OK && null != data) {
-
+                if (resultCode == Activity.RESULT_OK && data != null) {
                     val result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
 
+                    val barcode = sharedPref.getString("barcode", null)
+                    if (barcode != null) {
+                        sendMessage(result[0] + " " + barcode)
+                    }
                     sendMessage(result[0])
+                }
+
+            }
+            reqImageCapture -> {
+                if ( resultCode == Activity.RESULT_OK && data != null) {
+                    val imageBitmap = data.extras?.get("data") as Bitmap
+                    val image = InputImage.fromBitmap(imageBitmap, 0)
+                    // Configure what type of barcode formats you expect to read to improve speed of barcode detector
+                    val options = BarcodeScannerOptions.Builder().setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS).build()
+                    //  Get an instance of BarcodeScanner and specify the formats to recognize:
+                    val scanner = BarcodeScanning.getClient(options)
+                    // Process the image
+                    val result = scanner.process(image)
+                            .addOnSuccessListener { barcodes ->
+                                // Task completed successfully
+                                // ...
+                                for (barcode in barcodes) {
+                                    val bounds = barcode.boundingBox
+                                    val corners = barcode.cornerPoints
+
+                                    val rawValue = barcode.rawValue
+
+                                    sharedPref.edit().putString("barcode", rawValue).apply()
+                                    showToast("Barcode is saved successfully !")
+                                }
+                            }
+                            .addOnFailureListener {
+                                // Task failed with an exception
+                                showToast("Something went wrong !")
+                            }
                 }
             }
         }
+
     }
 
     public override fun onDestroy() {
