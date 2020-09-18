@@ -33,6 +33,7 @@ android {
         versionCode project.ext.versionCode
         versionName project.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -96,5 +97,8 @@ dependencies {
 
     implementation "com.android.support:support-core-utils:$rootProject.supportVersion"
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
+    implementation 'com.android.support:multidex:1.0.3'
+    // Barcode scan function dependency
+    implementation 'com.google.mlkit:barcode-scanning:16.0.3'
     implementation 'com.android.support:multidex:1.0.3'
 }
