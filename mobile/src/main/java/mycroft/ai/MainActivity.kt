@@ -20,6 +20,7 @@
 
 package mycroft.ai
 
+import android.Manifest.permission
 import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
@@ -38,6 +39,8 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.crashlytics.android.Crashlytics
@@ -71,6 +74,7 @@ class MainActivity : AppCompatActivity() {
     private val reqImageCapture = 101
     private var maximumRetries = 1
     private var currentItemPosition = -1
+    private val cameraPermissionRequestCode = 1
 
     private var isNetworkChangeReceiverRegistered = false
     private var isWearBroadcastRevieverRegistered = false
@@ -115,11 +119,13 @@ class MainActivity : AppCompatActivity() {
                 micButton.visibility = View.VISIBLE
                 utteranceInput.visibility = View.INVISIBLE
                 sendUtterance.visibility = View.INVISIBLE
+                scanButton.visibility = View.VISIBLE
             } else {
                 // Switch to keyboard
                 micButton.visibility = View.INVISIBLE
                 utteranceInput.visibility = View.VISIBLE
                 sendUtterance.visibility = View.VISIBLE
+                scanButton.visibility = View.INVISIBLE
             }
         }
 
@@ -163,8 +169,43 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun scanBarcode() {
-        // Prepare the input image
-        dispatchTakePictureIntent()
+        // Request permission
+        val isPermitted = ContextCompat.checkSelfPermission(this, permission.CAMERA)
+        // TODO : Solve the permission issue
+        if (isPermitted == PackageManager.PERMISSION_GRANTED) {
+            // Prepare the input image
+            dispatchTakePictureIntent()
+        } else {
+            // You can directly ask for the permission.
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(permission.CAMERA),
+                    cameraPermissionRequestCode)
+
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            cameraPermissionRequestCode -> {
+                // If request is cancelled, the result arrays are empty.
+                if ((grantResults.isNotEmpty() &&
+                                grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    // Permission is granted. Continue the action or workflow
+                    // in your app.
+                    dispatchTakePictureIntent()
+                } else {
+                    // Explain to the user that the feature is unavailable because
+                    // the features requires a permission that the user has denied.
+                    // At the same time, respect the user's decision. Don't link to
+                    // system settings in an effort to convince the user to change
+                    // their decision.
+                    showToast("Camera permission is needed to enable scan feature")
+                }
+                return
+            }
+
+        }
     }
 
     private fun dispatchTakePictureIntent() {
