@@ -475,12 +475,18 @@ class MainActivity : AppCompatActivity() {
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
 
                     val barcode = sharedPref.getString("barcode", null)
-                    if (barcode != null) {
-                        sendMessage(result[0] + " " + barcode)
-                        // Clear the barcode memory not to include the same barcode in the next utterances
-                        sharedPref.edit().remove("barcode").apply()
+                    if (result != null) {
+                        // Check if a barcode is scanned earlier than question
+                        // If not scanned, send only utterance
+                        if (barcode == null) {
+                            sendMessage(result[0])
+                        } else {
+                            sendMessage(result[0] + " " + barcode)
+                            // Clear the barcode memory not to include the same barcode in the next utterances
+                            sharedPref.edit().remove("barcode").apply()
+                        }
                     }
-                    sendMessage(result[0])
+
                 }
 
             }
