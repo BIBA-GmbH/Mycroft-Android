@@ -24,12 +24,10 @@ import android.Manifest.permission
 import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
-import android.provider.MediaStore
 import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.Menu
@@ -44,10 +42,8 @@ import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.crashlytics.android.Crashlytics
-import com.google.mlkit.vision.barcode.Barcode
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions
-import com.google.mlkit.vision.barcode.BarcodeScanning
-import com.google.mlkit.vision.common.InputImage
+import com.google.zxing.integration.android.IntentIntegrator
+import com.google.zxing.integration.android.IntentResult
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -71,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     private val logTag = "Mycroft"
     private val utterances = mutableListOf<Utterance>()
     private val reqCodeSpeechInput = 100
-    private val reqImageCapture = 101
+    private val requestScan = 101
     private var maximumRetries = 1
     private var currentItemPosition = -1
     private val cameraPermissionRequestCode = 1
@@ -168,15 +164,20 @@ class MainActivity : AppCompatActivity() {
         // startActivity(new Intent(this, DiscoveryActivity.class));
     }
 
+    /**
+     * This method starts scanner after camera permission check
+     * If permission is already granted, scanner starts
+     * If permission is not granted yet, asks for permission
+     */
     private fun scanBarcode() {
-        // Request permission
-        val isPermitted = ContextCompat.checkSelfPermission(this, permission.CAMERA)
-        // TODO : Solve the permission issue
-        if (isPermitted == PackageManager.PERMISSION_GRANTED) {
-            // Prepare the input image
-            dispatchTakePictureIntent()
+        // Check camera permission to be able to use scan feature
+        val permissionCheck = ContextCompat.checkSelfPermission(this, permission.CAMERA)
+        // If camera permission is granted continue to open camera
+        if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            // Open camera to scan barcode or QR code
+            openCameraToScan()
         } else {
-            // You can directly ask for the permission.
+            // If permission is not granted yet, ask for the permission.
             ActivityCompat.requestPermissions(this,
                     arrayOf(permission.CAMERA),
                     cameraPermissionRequestCode)
@@ -184,6 +185,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * This method handles permission request result given by user
+     * If permission is given, continues to scan operation by opening camera
+     * If permission is not given, explains why the permission is necessary
+     */
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
@@ -192,15 +198,12 @@ class MainActivity : AppCompatActivity() {
                 if ((grantResults.isNotEmpty() &&
                                 grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                     // Permission is granted. Continue the action or workflow
-                    // in your app.
-                    dispatchTakePictureIntent()
+                    // in the app.
+                    openCameraToScan()
                 } else {
                     // Explain to the user that the feature is unavailable because
                     // the features requires a permission that the user has denied.
-                    // At the same time, respect the user's decision. Don't link to
-                    // system settings in an effort to convince the user to change
-                    // their decision.
-                    showToast("Camera permission is needed to enable scan feature")
+                    showToast("Scan feature is only available with camera. So camera permission should be granted to enable scan feature")
                 }
                 return
             }
@@ -208,12 +211,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun dispatchTakePictureIntent() {
-            Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            takePictureIntent.resolveActivity(packageManager)?.also {
-                startActivityForResult(takePictureIntent, reqImageCapture)
-            }
-        }
+    /**
+     * This method opens the camera to start scan operation
+     */
+    private fun openCameraToScan() {
+        // Create a new IntentIntegrator instance
+        val scanIntentIntegrator = IntentIntegrator(this@MainActivity)
+        // Set barcode formats to improve performance
+        scanIntentIntegrator.setDesiredBarcodeFormats(IntentIntegrator.CODE_128, IntentIntegrator.QR_CODE)
+        // Set captureActivity property to new class to use portrait mode orientation
+        scanIntentIntegrator.captureActivity = CaptureActivityPortrait::class.java
+        // Create the scan intent to start scan
+        val scanIntent = scanIntentIntegrator.createScanIntent()
+        startActivityForResult(scanIntent, requestScan)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -274,6 +284,8 @@ class MainActivity : AppCompatActivity() {
             val barcode = sharedPref.getString("barcode", null)
             if (barcode != null) {
                 sendMessage(utterance + " " + barcode)
+                // Clear the barcode memory not to include the same barcode in the next utterances
+                sharedPref.edit().remove("barcode").apply()
             }else{
                 sendMessage(utterance)
             }
@@ -470,38 +482,30 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
-            reqImageCapture -> {
-                if ( resultCode == Activity.RESULT_OK && data != null) {
-                    val imageBitmap = data.extras?.get("data") as Bitmap
-                    val image = InputImage.fromBitmap(imageBitmap, 0)
-                    // Configure what type of barcode formats you expect to read to improve speed of barcode detector
-                    val options = BarcodeScannerOptions.Builder().setBarcodeFormats(Barcode.FORMAT_ALL_FORMATS).build()
-                    //  Get an instance of BarcodeScanner and specify the formats to recognize:
-                    val scanner = BarcodeScanning.getClient(options)
-                    // Process the image
-                    val result = scanner.process(image)
-                            .addOnSuccessListener { barcodes ->
-                                // Task completed successfully
-                                // ...
-                                for (barcode in barcodes) {
-                                    val bounds = barcode.boundingBox
-                                    val corners = barcode.cornerPoints
+            requestScan -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    // Parse the result of the scan intent to retrieve scan info
+                    val result: IntentResult = IntentIntegrator.parseActivityResult(resultCode, data)
+                    // If scan content is not null, store barcode to attach in the utterance
+                    if (result.contents != null) {
+                        // Get the result content
+                        val rawValue = result.contents
+                        // Save the scan info in shared preference
+                        sharedPref.edit().putString("barcode", rawValue).apply()
+                        showToast("Barcode is saved successfully !")
 
-                                    val rawValue = barcode.rawValue
+                    }else{
+                        // If scan content is null, show a message
+                       showToast("Nothing is scanned !")
 
-                                    sharedPref.edit().putString("barcode", rawValue).apply()
-                                    showToast("Barcode is saved successfully !")
-                                }
-                            }
-                            .addOnFailureListener {
-                                // Task failed with an exception
-                                showToast("Something went wrong !")
-                            }
+                    }
+
                 }
             }
-        }
 
+        }
     }
+
 
     public override fun onDestroy() {
         super.onDestroy()
@@ -550,11 +554,15 @@ class MainActivity : AppCompatActivity() {
             micButton.visibility = View.VISIBLE
             utteranceInput.visibility = View.INVISIBLE
             sendUtterance.visibility = View.INVISIBLE
+            // Make scan button visible when mic is activated
+            scanButton.visibility = View.VISIBLE
         } else {
             // Switch to keyboard
             micButton.visibility = View.INVISIBLE
             utteranceInput.visibility = View.VISIBLE
             sendUtterance.visibility = View.VISIBLE
+            // Make scan button invisible when keyboard is activated
+            scanButton.visibility = View.INVISIBLE
         }
 
         // set app reader setting
