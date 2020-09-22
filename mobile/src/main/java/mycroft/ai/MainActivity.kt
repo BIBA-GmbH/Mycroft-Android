@@ -22,8 +22,11 @@ package mycroft.ai
 
 import android.Manifest.permission
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothHeadset
 import android.content.*
 import android.content.pm.PackageManager
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -454,6 +457,19 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
                 getString(R.string.speech_prompt))
+
+        // Create an audio manager instance to accept bluetooth mic input
+        val mAudioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        // Check if there is a bluetooth , if it is enabled and if it is connected to headset
+        if(bluetoothAdapter != null
+                && bluetoothAdapter.isEnabled
+                && bluetoothAdapter.getProfileConnectionState(BluetoothHeadset.HEADSET) == BluetoothHeadset.STATE_CONNECTED)
+        {
+            // Start to send and receive audio to/from a bluetooth SCO headset
+            mAudioManager.startBluetoothSco()
+        }
+
         try {
             startActivityForResult(intent, reqCodeSpeechInput)
         } catch (a: ActivityNotFoundException) {
@@ -485,6 +501,10 @@ class MainActivity : AppCompatActivity() {
                             // Clear the barcode memory not to include the same barcode in the next utterances
                             sharedPref.edit().remove("barcode").apply()
                         }
+                        // Stop bluetooth SCO audio connection
+                        val mAudioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                        mAudioManager.stopBluetoothSco()
+
                     }
 
                 }
