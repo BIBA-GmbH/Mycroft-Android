@@ -296,20 +296,10 @@ class MainActivity : AppCompatActivity() {
             val barcode = sharedPref.getString("barcode", null)
             if (barcode != null) {
                 sendMessage("$utterance $barcode")
-                // Check if voice switch 2 is checked or no
-                if (voxswitch2.isChecked){
-                    // If it is checked then speak it loudly
-                    ttsManager.addQueue("$utterance $barcode")
-                }
                 // Clear the barcode memory not to include the same barcode in the next utterances
                 sharedPref.edit().remove("barcode").apply()
             }else{
                 sendMessage(utterance)
-                // Check if voice switch 2 is checked or no
-                if (voxswitch2.isChecked){
-                    // If it is checked then speak it loudly
-                    ttsManager.addQueue(utterance)
-                }
             }
             utteranceInput.text.clear()
         }
@@ -441,7 +431,7 @@ class MainActivity : AppCompatActivity() {
         //final String json = "{\"message_type\":\"recognizer_loop:utterance\", \"context\": null, \"metadata\": {\"utterances\": [\"" + msg + "\"]}}";
         val json = "{\"data\": {\"utterances\": [\"$msg\"]}, \"type\": \"recognizer_loop:utterance\", \"context\": null}"
 
-        // When user uses microphone to send message, check voxswitch2 to speak user utterance loudly
+        // Check voxswitch2 to speak user utterance loudly
         if (voxswitch2.isChecked){
             ttsManager.addQueue(msg)
         }
