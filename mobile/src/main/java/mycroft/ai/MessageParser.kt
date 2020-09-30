@@ -48,8 +48,14 @@ internal class MessageParser(private val message: String,
         try {
             val obj = JSONObject(message)
             if (obj.optString("type") == "speak") {
-                val ret = Utterance(obj.getJSONObject("data").getString("utterance"), UtteranceFrom.MYCROFT)
-                callback.call(ret)
+                val skill = Utterance(obj.getJSONObject("data").getJSONObject("meta").getString("skill"), UtteranceFrom.MYCROFT).utterance
+                if(skill == "RasaSkill" ){
+                    val ret = Utterance(obj.getJSONObject("data").getJSONObject("meta").getString("dialog"), UtteranceFrom.MYCROFT)
+                    callback.call(ret)
+                }else{
+                    val ret = Utterance(obj.getJSONObject("data").getString("utterance"), UtteranceFrom.MYCROFT)
+                    callback.call(ret)
+                }
             }
             if (obj.optString("type") == "write") {
                 val ret = Utterance(obj.getJSONObject("data").getString("utterance"), UtteranceFrom.MYCROFT, silent=true)
