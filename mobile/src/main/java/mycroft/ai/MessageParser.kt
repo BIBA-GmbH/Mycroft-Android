@@ -48,11 +48,14 @@ internal class MessageParser(private val message: String,
         try {
             val obj = JSONObject(message)
             if (obj.optString("type") == "speak") {
+                // Get the skill name to get the correct json key to have punctuations
                 val skill = Utterance(obj.getJSONObject("data").getJSONObject("meta").getString("skill"), UtteranceFrom.MYCROFT).utterance
+                // If skill is RasaSkill, punctuations comes with "dialog" key
                 if(skill == "RasaSkill" ){
                     val ret = Utterance(obj.getJSONObject("data").getJSONObject("meta").getString("dialog"), UtteranceFrom.MYCROFT)
                     callback.call(ret)
                 }else{
+                    // If it is any mycorft skill, "utterance" key is the one to be used because it doesn't have "dialog" key
                     val ret = Utterance(obj.getJSONObject("data").getString("utterance"), UtteranceFrom.MYCROFT)
                     callback.call(ret)
                 }
