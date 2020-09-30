@@ -64,6 +64,23 @@
         android:layout_height="wrap_content">
 
         <ToggleButton
+            android:id="@+id/voxswitch2"
+            android:layout_width="24dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_toRightOf="@id/kbMicSwitch"
+            android:background="@android:color/transparent"
+            android:button="@drawable/volume_toggle"
+            android:checked="false"
+            android:textOff=""
+            android:textOn="" />
+
+        <ToggleButton
             android:id="@+id/voxswitch"
             android:layout_width="24dp"
             android:layout_height="wrap_content"
@@ -105,7 +122,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_toStartOf="@id/sendUtterance"
-            android:layout_toEndOf="@id/kbMicSwitch"
+            android:layout_toEndOf="@id/voxswitch2"
             android:inputType="textShortMessage"
             android:visibility="invisible" />
 

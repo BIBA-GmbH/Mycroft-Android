@@ -151,6 +151,15 @@ class MainActivity : AppCompatActivity() {
             // stop tts from speaking if app reader disabled
             if (!isChecked) ttsManager.initQueue("")
         }
+        //attach a listener to check for changes in state for user utterance
+        voxswitch2.setOnCheckedChangeListener { _, isChecked ->
+            val editor = sharedPref.edit()
+            editor.putBoolean("appUserReaderSwitch", isChecked)
+            editor.apply()
+
+            // stop tts from speaking if app user reader disabled
+            if (!isChecked) ttsManager.initQueue("")
+        }
 
         val llm = LinearLayoutManager(this)
         llm.stackFromEnd = true
@@ -286,11 +295,21 @@ class MainActivity : AppCompatActivity() {
         if (utterance != "") {
             val barcode = sharedPref.getString("barcode", null)
             if (barcode != null) {
-                sendMessage(utterance + " " + barcode)
+                sendMessage("$utterance $barcode")
+                // Check if voice switch 2 is checked or no
+                if (voxswitch2.isChecked){
+                    // If it is checked then speak it loudly
+                    ttsManager.addQueue("$utterance $barcode")
+                }
                 // Clear the barcode memory not to include the same barcode in the next utterances
                 sharedPref.edit().remove("barcode").apply()
             }else{
                 sendMessage(utterance)
+                // Check if voice switch 2 is checked or no
+                if (voxswitch2.isChecked){
+                    // If it is checked then speak it loudly
+                    ttsManager.addQueue(utterance)
+                }
             }
             utteranceInput.text.clear()
         }
@@ -421,6 +440,11 @@ class MainActivity : AppCompatActivity() {
         // let's keep it simple eh?
         //final String json = "{\"message_type\":\"recognizer_loop:utterance\", \"context\": null, \"metadata\": {\"utterances\": [\"" + msg + "\"]}}";
         val json = "{\"data\": {\"utterances\": [\"$msg\"]}, \"type\": \"recognizer_loop:utterance\", \"context\": null}"
+
+        // When user uses microphone to send message, check voxswitch2 to speak user utterance loudly
+        if (voxswitch2.isChecked){
+            ttsManager.addQueue(msg)
+        }
 
         try {
             if (webSocketClient == null || webSocketClient!!.connection.isClosed) {
@@ -595,6 +619,8 @@ class MainActivity : AppCompatActivity() {
 
         // set app reader setting
         voxswitch.isChecked = sharedPref.getBoolean("appReaderSwitch", true)
+        // set app user utterance reader setting
+        voxswitch2.isChecked = sharedPref.getBoolean("appUserReaderSwitch", true)
 
         maximumRetries = Integer.parseInt(sharedPref.getString("maximumRetries", "1")!!)
     }
