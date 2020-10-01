@@ -27,7 +27,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothHeadset
 import android.content.*
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
@@ -41,9 +40,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -69,7 +66,6 @@ import mycroft.ai.utils.NetworkUtil
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.exceptions.WebsocketNotConnectedException
 import org.java_websocket.handshake.ServerHandshake
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
@@ -99,7 +95,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var networkChangeReceiver: NetworkChangeReceiver
     private lateinit var wearBroadcastReceiver: BroadcastReceiver
-    lateinit var currentPhotoPath: String
+    private lateinit var currentPhotoPath: String
 
 
     var webSocketClient: WebSocketClient? = null
@@ -109,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
         Fabric.with(this, Crashlytics())
         setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar as Toolbar?)
+        setSupportActionBar(toolbar)
 
 
         loadPreferences()
@@ -147,14 +143,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        utteranceInput.setOnEditorActionListener(TextView.OnEditorActionListener { _, actionId, _ ->
+        utteranceInput.setOnEditorActionListener { _, actionId, _ ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
                 sendUtterance()
                 true
             } else {
                 false
             }
-        })
+        }
         micButton.setOnClickListener { promptSpeechInput() }
         sendUtterance.setOnClickListener { sendUtterance() }
         scanButton.setOnClickListener { scanBarcode() }
@@ -238,7 +234,6 @@ class MainActivity : AppCompatActivity() {
         val timeStamp: String = SimpleDateFormat("dd.MM.yyyy 'at' HH:mm:ss").format(Date())
         // Get the storage directory to store (this directory is only visible to this app)
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        showToast(storageDir.toString())
         return File.createTempFile(
                 "Assistant-${timeStamp}*", /* prefix */
                 ".jpg", /* suffix */
@@ -388,7 +383,7 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    fun sendUtterance() {
+    private fun sendUtterance() {
         val utterance = utteranceInput.text.toString()
         if (utterance != "") {
             val barcode = sharedPref.getString("barcode", null)
@@ -691,7 +686,7 @@ class MainActivity : AppCompatActivity() {
 
         // get mycroft-core ip address
         wsct = sharedPref.getString("ip", "")!!
-        if (wsct!!.isEmpty()) {
+        if (wsct.isEmpty()) {
             // eep, show the settings intent!
             startActivity(Intent(this, SettingsActivity::class.java))
         } else if (webSocketClient == null || webSocketClient!!.connection.isClosed) {
