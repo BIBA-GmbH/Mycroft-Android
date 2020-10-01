@@ -21,6 +21,7 @@
 package mycroft.ai
 
 import android.Manifest.permission
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothHeadset
@@ -30,6 +31,7 @@ import android.graphics.Bitmap
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.preference.PreferenceManager
 import android.provider.MediaStore
@@ -44,10 +46,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.crashlytics.android.Crashlytics
-import com.google.firebase.FirebaseApp
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.google.zxing.integration.android.IntentIntegrator
@@ -68,9 +70,12 @@ import org.java_websocket.client.WebSocketClient
 import org.java_websocket.exceptions.WebsocketNotConnectedException
 import org.java_websocket.handshake.ServerHandshake
 import java.io.ByteArrayOutputStream
-import java.io.FileInputStream
+import java.io.File
+import java.io.IOException
+import java.io.InputStream
 import java.net.URI
 import java.net.URISyntaxException
+import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -94,6 +99,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPref: SharedPreferences
     private lateinit var networkChangeReceiver: NetworkChangeReceiver
     private lateinit var wearBroadcastReceiver: BroadcastReceiver
+    lateinit var currentPhotoPath: String
+
 
     var webSocketClient: WebSocketClient? = null
 
@@ -195,35 +202,68 @@ class MainActivity : AppCompatActivity() {
      * Starts the camera to take a picture and upload it to storage
      */
     private fun dispatchTakePictureIntent() {
-        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        try {
-            startActivityForResult(takePictureIntent, requestImageCapture)
-        } catch (e: ActivityNotFoundException) {
-            showToast(e.message.toString())
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    // Error occurred while creating the File
+                    null
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    // Get and put the photo URI to intent to upload it in storage in onActivityResult
+                    val photoURI: Uri = FileProvider.getUriForFile(
+                            this,
+                            BuildConfig.APPLICATION_ID + ".fileprovider",
+                            it
+                    )
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, requestImageCapture)
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Creates a full size image file and saves it by storing its path to be used to upload
+     */
+    @SuppressLint("SimpleDateFormat")
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("dd.MM.yyyy 'at' HH:mm:ss").format(Date())
+        // Get the storage directory to store (this directory is only visible to this app)
+        val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        showToast(storageDir.toString())
+        return File.createTempFile(
+                "Assistant-${timeStamp}*", /* prefix */
+                ".jpg", /* suffix */
+                storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
         }
     }
 
     /**
-     * Uploads a byte array to cloud when a picture taken from the app
+     * Uploads input stream to cloud when a picture taken from the app
      */
-    private fun uploadToCloud(bytes: ByteArray) {
-        // TODO 1: Name files with meaningful names
-        // TODO 2: Upload full size images instead of bitmaps
+    private fun uploadToCloud(stream: InputStream, fileName: String) {
         // Get a non-default Storage bucket
         val storage = Firebase.storage("gs://quickstart-1595243332893.appspot.com")
 
         // Create a storage reference from our app
         val storageRef = storage.reference
 
-        // Generate a random strings to name the file in storage
-        val randomName = (0..100).random().toString()
-        val randomName2 = (0..100).random().toString()
-
         // Give the name to file
-        val mountainsRef = storageRef.child(randomName + randomName2)
+        val assistantRef = storageRef.child(fileName)
 
         // Upload the image to storage
-        val uploadTask = mountainsRef.putBytes(bytes)
+        val uploadTask = assistantRef.putStream(stream)
         uploadTask.addOnFailureListener {e ->
             // Handle unsuccessful uploads
             showToast(e.message.toString())
@@ -604,14 +644,12 @@ class MainActivity : AppCompatActivity() {
             }
             requestImageCapture -> {
                 if (requestCode == requestImageCapture && resultCode == RESULT_OK) {
-                    // Get the bitmap of the image
-                    val imageBitmap = data?.extras?.get("data") as Bitmap
-                    // Convert bitmap into baos and compress it
-                    val baos = ByteArrayOutputStream()
-                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                    // Convert baos to byte array to be able to upload image
-                    val bytes = baos.toByteArray()
-                    uploadToCloud(bytes)
+                    // Get the image file
+                    val picture = File(currentPhotoPath)
+                    // Convert it into input stream to be able to upload to cloud
+                    val pictureAsStream = picture.inputStream()
+                    // Upload to cloud with its name
+                    uploadToCloud(pictureAsStream, picture.name.substringBefore("*"))
                 }
             }
 
