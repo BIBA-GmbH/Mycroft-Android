@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "133458571725",
+    "firebase_url": "https://quickstart-1595243332893.firebaseio.com",
+    "project_id": "quickstart-1595243332893",
+    "storage_bucket": "quickstart-1595243332893.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133458571725:android:0ac6d39100cd2070915484",
+        "android_client_info": {
+          "package_name": "mycroft.ai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "133458571725-6ucgdrk0mb0abi16kcivh58rka6cktv3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoqhsCLsiJ9IJNZiKrNJQkbutjn9-9CoE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "133458571725-6ucgdrk0mb0abi16kcivh58rka6cktv3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
