@@ -26,11 +26,13 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothHeadset
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.preference.PreferenceManager
+import android.provider.MediaStore
 import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.Menu
@@ -45,6 +47,9 @@ import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.crashlytics.android.Crashlytics
+import com.google.firebase.FirebaseApp
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.google.zxing.integration.android.IntentIntegrator
 import com.google.zxing.integration.android.IntentResult
 import io.fabric.sdk.android.Fabric
@@ -62,6 +67,8 @@ import mycroft.ai.utils.NetworkUtil
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.exceptions.WebsocketNotConnectedException
 import org.java_websocket.handshake.ServerHandshake
+import java.io.ByteArrayOutputStream
+import java.io.FileInputStream
 import java.net.URI
 import java.net.URISyntaxException
 import java.util.*
@@ -71,6 +78,7 @@ class MainActivity : AppCompatActivity() {
     private val utterances = mutableListOf<Utterance>()
     private val reqCodeSpeechInput = 100
     private val requestScan = 101
+    private val requestImageCapture = 102
     private var maximumRetries = 1
     private var currentItemPosition = -1
     private val cameraPermissionRequestCode = 1
@@ -119,12 +127,16 @@ class MainActivity : AppCompatActivity() {
                 utteranceInput.visibility = View.INVISIBLE
                 sendUtterance.visibility = View.INVISIBLE
                 scanButton.visibility = View.VISIBLE
+                uploadButton.visibility = View.VISIBLE
+
             } else {
                 // Switch to keyboard
                 micButton.visibility = View.INVISIBLE
                 utteranceInput.visibility = View.VISIBLE
                 sendUtterance.visibility = View.VISIBLE
                 scanButton.visibility = View.INVISIBLE
+                uploadButton.visibility = View.INVISIBLE
+
             }
         }
 
@@ -172,8 +184,54 @@ class MainActivity : AppCompatActivity() {
 
         registerReceivers()
 
+        // Set a click listener to a new button to upload images to cloud
+        uploadButton.setOnClickListener { dispatchTakePictureIntent() }
+
         // start the discovery activity (testing only)
         // startActivity(new Intent(this, DiscoveryActivity.class));
+    }
+
+    /**
+     * Starts the camera to take a picture and upload it to storage
+     */
+    private fun dispatchTakePictureIntent() {
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        try {
+            startActivityForResult(takePictureIntent, requestImageCapture)
+        } catch (e: ActivityNotFoundException) {
+            showToast(e.message.toString())
+        }
+    }
+
+    /**
+     * Uploads a byte array to cloud when a picture taken from the app
+     */
+    private fun uploadToCloud(bytes: ByteArray) {
+        // TODO 1: Name files with meaningful names
+        // TODO 2: Upload full size images instead of bitmaps
+        // Get a non-default Storage bucket
+        val storage = Firebase.storage("gs://quickstart-1595243332893.appspot.com")
+
+        // Create a storage reference from our app
+        val storageRef = storage.reference
+
+        // Generate a random strings to name the file in storage
+        val randomName = (0..100).random().toString()
+        val randomName2 = (0..100).random().toString()
+
+        // Give the name to file
+        val mountainsRef = storageRef.child(randomName + randomName2)
+
+        // Upload the image to storage
+        val uploadTask = mountainsRef.putBytes(bytes)
+        uploadTask.addOnFailureListener {e ->
+            // Handle unsuccessful uploads
+            showToast(e.message.toString())
+        }.addOnSuccessListener { taskSnapshot ->
+            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+            // ...
+            showToast(taskSnapshot.metadata?.name.toString() + " is uploaded successfully")
+        }
     }
 
     /**
@@ -544,6 +602,18 @@ class MainActivity : AppCompatActivity() {
 
                 }
             }
+            requestImageCapture -> {
+                if (requestCode == requestImageCapture && resultCode == RESULT_OK) {
+                    // Get the bitmap of the image
+                    val imageBitmap = data?.extras?.get("data") as Bitmap
+                    // Convert bitmap into baos and compress it
+                    val baos = ByteArrayOutputStream()
+                    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                    // Convert baos to byte array to be able to upload image
+                    val bytes = baos.toByteArray()
+                    uploadToCloud(bytes)
+                }
+            }
 
         }
     }
@@ -598,6 +668,9 @@ class MainActivity : AppCompatActivity() {
             sendUtterance.visibility = View.INVISIBLE
             // Make scan button visible when mic is activated
             scanButton.visibility = View.VISIBLE
+            // Make upload button visible when mic is activated
+            uploadButton.visibility = View.VISIBLE
+
         } else {
             // Switch to keyboard
             micButton.visibility = View.INVISIBLE
@@ -605,6 +678,9 @@ class MainActivity : AppCompatActivity() {
             sendUtterance.visibility = View.VISIBLE
             // Make scan button invisible when keyboard is activated
             scanButton.visibility = View.INVISIBLE
+            // Make upload button invisible when keyboard is activated
+            uploadButton.visibility = View.INVISIBLE
+
         }
 
         // set app reader setting
