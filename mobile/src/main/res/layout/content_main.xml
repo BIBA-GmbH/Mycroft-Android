@@ -68,12 +68,12 @@
             android:layout_width="24dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="false"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="4dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="4dp"
-            android:layout_toRightOf="@id/kbMicSwitch"
             android:background="@android:color/transparent"
             android:button="@drawable/volume_toggle"
             android:checked="false"
@@ -122,7 +122,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_toStartOf="@id/sendUtterance"
-            android:layout_toEndOf="@id/voxswitch2"
+            android:layout_toEndOf="@id/kbMicSwitch"
             android:inputType="textShortMessage"
             android:visibility="invisible" />
 
@@ -130,9 +130,13 @@
             android:id="@+id/sendUtterance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentEnd="false"
             android:layout_alignParentBottom="true"
-            android:layout_margin="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_toLeftOf="@id/voxswitch2"
             android:background="@android:color/transparent"
             android:contentDescription="@string/send_utterance"
             android:src="@drawable/ic_send_black_24dp"
@@ -146,6 +150,17 @@
             android:layout_toEndOf="@id/micButton"
             android:scaleType="fitCenter"
             android:src="@drawable/barcode_icon" />
+
+        <ImageButton
+            android:id="@+id/uploadButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignBaseline="@id/micButton"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@id/scanButton"
+            android:scaleType="fitCenter"
+            android:src="@drawable/upload_icon"
+            tools:srcCompat="@drawable/upload_icon" />
 
     </RelativeLayout>
 
