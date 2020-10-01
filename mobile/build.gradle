@@ -22,6 +22,8 @@ apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'com.google.gms.google-services'
+
 android {
 
     compileSdkVersion rootProject.compileSdkVersion
@@ -98,4 +100,8 @@ dependencies {
     implementation "com.android.support:support-core-utils:$rootProject.supportVersion"
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.android.support:multidex:1.0.3'
+
+    // Add the dependency for the Cloud Storage for Firebase Android library
+    implementation 'com.google.firebase:firebase-storage-ktx:19.2.0'
+
 }
