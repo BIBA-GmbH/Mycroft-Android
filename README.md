@@ -4,6 +4,16 @@
 [![Join chat](https://img.shields.io/badge/Mattermost-join_chat-brightgreen.svg)](https://chat.mycroft.ai/community/channels/android)
 
 
+## Modifications for DIAMOND
+
+We added these features:
+- separate toggle audio output for user utterances and bot utterances
+- image upload to a cloud folder
+- QR code reading
+- write-only message support (silent utters) for the Chat-with-Rasa skill that emits this special message type on the Mycroft bus.
+- links are clickable
+
+
 
 # Mycroft-Android
 
