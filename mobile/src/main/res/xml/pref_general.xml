@@ -23,7 +23,6 @@
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <EditTextPreference
-        android:capitalize="none"
         android:inputType="textCapWords"
         android:key="ip"
         android:maxLines="1"
@@ -38,7 +37,6 @@
         android:summary="@string/pref_summary_app_reader_switch"
         android:defaultValue="true"/>
     <EditTextPreference
-        android:defaultValue="true"
         android:key="nextcloud_username"
         android:selectAllOnFocus="true"
         android:singleLine="true"
