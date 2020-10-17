@@ -49,14 +49,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.crashlytics.android.Crashlytics
 import com.google.zxing.integration.android.IntentIntegrator
 import com.google.zxing.integration.android.IntentResult
-import com.owncloud.android.lib.common.OwnCloudBasicCredentials
 import com.owncloud.android.lib.common.OwnCloudClientFactory
 import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
 import com.owncloud.android.lib.common.network.OnDatatransferProgressListener
 import com.owncloud.android.lib.common.operations.OnRemoteOperationListener
 import com.owncloud.android.lib.common.operations.RemoteOperation
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
-import com.owncloud.android.lib.resources.files.CreateFolderRemoteOperation
 import com.owncloud.android.lib.resources.files.UploadFileRemoteOperation
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
@@ -75,7 +73,6 @@ import org.java_websocket.exceptions.WebsocketNotConnectedException
 import org.java_websocket.handshake.ServerHandshake
 import java.io.File
 import java.io.IOException
-import java.io.InputStream
 import java.net.URI
 import java.net.URISyntaxException
 import java.text.SimpleDateFormat
@@ -269,7 +266,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
         val serverUri = Uri.parse("https://ncld.ips.biba.uni-bremen.de/")
 
         // Create client object to perform remote operations
-        var mClient = OwnCloudClientFactory.createOwnCloudClient(serverUri, this, true)
+        val mClient = OwnCloudClientFactory.createOwnCloudClient(serverUri, this, true)
         // Set credentials for authorization
         mClient.credentials = OwnCloudCredentialsFactory.newBasicCredentials(nextCloudUsername, nextCloudPassword)
         // Set file properties to upload
@@ -788,6 +785,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
                     // do your stuff here
                     showToast("Image is uploaded successfully")
                 } else {
+                    // TODO: Fix 500:Internal server error
                     showToast("Something went wrong with upload ! ")
 
                 }
