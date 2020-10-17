@@ -44,6 +44,12 @@
     <string name="pref_title_default_ip">Assistant client token</string>
     <string name="pref_default_display_ip">Please insert your token here</string>
 
+    <string name="pref_title_nextcloud_username">Next Cloud Username</string>
+    <string name="pref_default_nextcloud_username">Please insert your cloud username here</string>
+
+    <string name="pref_title_nextcloud_password">Next Cloud Password</string>
+    <string name="pref_default_nextcloud_password">Please insert your cloud password here</string>
+
     <string name="pref_title_app_reader_switch">Voice Responses</string>
     <string name="pref_summary_app_reader_switch">enable TTS responses</string>
 
