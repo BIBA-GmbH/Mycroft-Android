@@ -24,12 +24,12 @@
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <EditTextPreference
         android:capitalize="none"
-        android:defaultValue="@string/pref_default_display_ip"
         android:inputType="textCapWords"
         android:key="ip"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
+        android:summary="@string/pref_default_display_ip"
         android:title="@string/pref_title_default_ip" />
 
     <SwitchPreference
@@ -37,5 +37,18 @@
         android:title="@string/pref_title_app_reader_switch"
         android:summary="@string/pref_summary_app_reader_switch"
         android:defaultValue="true"/>
+    <EditTextPreference
+        android:defaultValue="true"
+        android:key="nextcloud_username"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_default_nextcloud_username"
+        android:title="@string/pref_title_nextcloud_username" />
+    <EditTextPreference
+        android:key="nextcloud_password"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_default_nextcloud_password"
+        android:title="@string/pref_title_nextcloud_password" />
 
 </PreferenceScreen>
