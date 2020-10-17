@@ -392,14 +392,8 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     private fun sendUtterance() {
         val utterance = utteranceInput.text.toString()
         if (utterance != "") {
-            val barcode = sharedPref.getString("barcode", null)
-            if (barcode != null) {
-                sendMessage("$utterance $barcode")
-                // Clear the barcode memory not to include the same barcode in the next utterances
-                sharedPref.edit().remove("barcode").apply()
-            }else{
-                sendMessage(utterance)
-            }
+            // Send utterance and clear input frame for next time
+            sendMessage(utterance)
             utteranceInput.text.clear()
         }
     }
@@ -603,17 +597,9 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
                     val result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
 
-                    val barcode = sharedPref.getString("barcode", null)
                     if (result != null) {
-                        // Check if a barcode is scanned earlier than question
-                        // If not scanned, send only utterance
-                        if (barcode == null) {
-                            sendMessage(result[0])
-                        } else {
-                            sendMessage(result[0] + " " + barcode)
-                            // Clear the barcode memory not to include the same barcode in the next utterances
-                            sharedPref.edit().remove("barcode").apply()
-                        }
+                        // send audio input
+                        sendMessage(result[0])
                         // Stop bluetooth SCO audio connection
                         val mAudioManager = this.getSystemService(Context.AUDIO_SERVICE) as AudioManager
                         mAudioManager.stopBluetoothSco()
@@ -631,9 +617,8 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
                     if (result.contents != null) {
                         // Get the result content
                         val rawValue = result.contents
-                        // Save the scan info in shared preference
-                        sharedPref.edit().putString("barcode", rawValue).apply()
-                        showToast("Barcode is saved successfully !")
+                        // send barcode value
+                        sendMessage(rawValue)
 
                     }else{
                         // If scan content is null, show a message
