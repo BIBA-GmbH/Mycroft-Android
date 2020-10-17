@@ -47,10 +47,17 @@ import androidx.core.content.FileProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.crashlytics.android.Crashlytics
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import com.google.zxing.integration.android.IntentIntegrator
 import com.google.zxing.integration.android.IntentResult
+import com.owncloud.android.lib.common.OwnCloudBasicCredentials
+import com.owncloud.android.lib.common.OwnCloudClientFactory
+import com.owncloud.android.lib.common.OwnCloudCredentialsFactory
+import com.owncloud.android.lib.common.network.OnDatatransferProgressListener
+import com.owncloud.android.lib.common.operations.OnRemoteOperationListener
+import com.owncloud.android.lib.common.operations.RemoteOperation
+import com.owncloud.android.lib.common.operations.RemoteOperationResult
+import com.owncloud.android.lib.resources.files.CreateFolderRemoteOperation
+import com.owncloud.android.lib.resources.files.UploadFileRemoteOperation
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
@@ -74,7 +81,7 @@ import java.net.URISyntaxException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemoteOperationListener {
     private val logTag = "Mycroft"
     private val utterances = mutableListOf<Utterance>()
     private val reqCodeSpeechInput = 100
@@ -96,6 +103,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var networkChangeReceiver: NetworkChangeReceiver
     private lateinit var wearBroadcastReceiver: BroadcastReceiver
     private lateinit var currentPhotoPath: String
+
+    private val mHandler = Handler()
+    private lateinit var nextCloudUsername: String
+    private lateinit var nextCloudPassword: String
 
 
     var webSocketClient: WebSocketClient? = null
@@ -247,26 +258,24 @@ class MainActivity : AppCompatActivity() {
     /**
      * Uploads input stream to cloud when a picture taken from the app
      */
-    private fun uploadToCloud(stream: InputStream, fileName: String) {
-        // Get a non-default Storage bucket
-        val storage = Firebase.storage("gs://quickstart-1595243332893.appspot.com")
+    @SuppressLint("SimpleDateFormat")
+    private fun uploadToCloud(path: String, fileName: String) {
 
-        // Create a storage reference from our app
-        val storageRef = storage.reference
+        // get next cloud username and password from settings
+        nextCloudUsername = sharedPref.getString("nextcloud_username", "")!!
+        nextCloudPassword = sharedPref.getString("nextcloud_password", "")!!
 
-        // Give the name to file
-        val assistantRef = storageRef.child(fileName)
+        // Parse URI to the base URL of the Nextcloud server
+        val serverUri = Uri.parse("https://ncld.ips.biba.uni-bremen.de/")
 
-        // Upload the image to storage
-        val uploadTask = assistantRef.putStream(stream)
-        uploadTask.addOnFailureListener {e ->
-            // Handle unsuccessful uploads
-            showToast(e.message.toString())
-        }.addOnSuccessListener { taskSnapshot ->
-            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-            // ...
-            showToast(taskSnapshot.metadata?.name.toString() + " is uploaded successfully")
-        }
+        // Create client object to perform remote operations
+        var mClient = OwnCloudClientFactory.createOwnCloudClient(serverUri, this, true)
+        // Set credentials for authorization
+        mClient.credentials = OwnCloudCredentialsFactory.newBasicCredentials(nextCloudUsername, nextCloudPassword)
+        // Set file properties to upload
+        val uploadOperation = UploadFileRemoteOperation(path, "newFolderPath/$fileName.jpg", "image/jpg", SimpleDateFormat("dd.MM.yyyy").format(Date()))
+        // Upload the file
+        uploadOperation.execute(mClient, this, mHandler)
     }
 
     /**
@@ -642,9 +651,9 @@ class MainActivity : AppCompatActivity() {
                     // Get the image file
                     val picture = File(currentPhotoPath)
                     // Convert it into input stream to be able to upload to cloud
-                    val pictureAsStream = picture.inputStream()
+                    val path = picture.absolutePath
                     // Upload to cloud with its name
-                    uploadToCloud(pictureAsStream, picture.name.substringBefore("*"))
+                    uploadToCloud(path, picture.name.substringBefore("*"))
                 }
             }
 
@@ -722,6 +731,11 @@ class MainActivity : AppCompatActivity() {
         voxswitch2.isChecked = sharedPref.getBoolean("appUserReaderSwitch", true)
 
         maximumRetries = Integer.parseInt(sharedPref.getString("maximumRetries", "1")!!)
+
+        // get next cloud username and password
+        nextCloudUsername = sharedPref.getString("nextcloud_username", "")!!
+        nextCloudPassword = sharedPref.getString("nextcloud_password", "")!!
+
     }
 
     private fun checkIfLaunchedFromWidget(intent: Intent) {
@@ -759,5 +773,25 @@ class MainActivity : AppCompatActivity() {
 
     private fun showToast(message: String) {
         GuiUtilities.showToast(applicationContext, message)
+    }
+
+    override fun onTransferProgress(progressRate: Long, totalTransferredSoFar: Long, totalToTransfer: Long, fileAbsoluteName: String?) {
+        mHandler.post {
+            // do your UI updates about progress here
+        }
+    }
+
+    override fun onRemoteOperationFinish(operation: RemoteOperation?, result: RemoteOperationResult?) {
+        if (operation is UploadFileRemoteOperation) {
+            if (result != null) {
+                if (result.isSuccess) {
+                    // do your stuff here
+                    showToast("Image is uploaded successfully")
+                } else {
+                    showToast("Something went wrong with upload ! ")
+
+                }
+            }
+        }
     }
 }
