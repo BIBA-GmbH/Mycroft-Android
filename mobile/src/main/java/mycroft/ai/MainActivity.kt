@@ -40,13 +40,18 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.crashlytics.android.Crashlytics
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.google.zxing.integration.android.IntentIntegrator
 import com.google.zxing.integration.android.IntentResult
 import com.owncloud.android.lib.common.OwnCloudClientFactory
@@ -56,7 +61,6 @@ import com.owncloud.android.lib.common.operations.OnRemoteOperationListener
 import com.owncloud.android.lib.common.operations.RemoteOperation
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.resources.files.UploadFileRemoteOperation
-import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 import mycroft.ai.Constants.MycroftMobileConstants.VERSION_CODE_PREFERENCE_KEY
@@ -72,6 +76,7 @@ import org.java_websocket.client.WebSocketClient
 import org.java_websocket.exceptions.WebsocketNotConnectedException
 import org.java_websocket.handshake.ServerHandshake
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 import java.net.URI
 import java.net.URISyntaxException
@@ -102,16 +107,19 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     private lateinit var currentPhotoPath: String
 
     private val mHandler = Handler()
-    private lateinit var nextCloudUsername: String
-    private lateinit var nextCloudPassword: String
+    private lateinit var cloudUsername: String
+    private lateinit var cloudPassword: String
+    private lateinit var cloudService: String
 
+    private lateinit var auth: FirebaseAuth
 
     var webSocketClient: WebSocketClient? = null
+    private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        Fabric.with(this, Crashlytics())
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
@@ -252,6 +260,30 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
         }
     }
 
+
+    private fun signInToFirebase() {
+        // Initialize Firebase Auth
+        auth = Firebase.auth
+
+
+        showToast("Signing in for $cloudUsername")
+
+        auth.signInWithEmailAndPassword(cloudUsername, cloudPassword)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Toast.makeText(baseContext, "Authentication failed. Check username and password",
+                                Toast.LENGTH_SHORT).show()
+                    }
+
+                }
+
+    }
+
+
     /**
      * Uploads input stream to cloud when a picture taken from the app
      */
@@ -259,20 +291,57 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     private fun uploadToCloud(path: String, fileName: String) {
 
         // get next cloud username and password from settings
-        nextCloudUsername = sharedPref.getString("nextcloud_username", "")!!
-        nextCloudPassword = sharedPref.getString("nextcloud_password", "")!!
+        cloudUsername = sharedPref.getString("cloud_username", "")!!
+        cloudPassword = sharedPref.getString("cloud_password", "")!!
 
-        // Parse URI to the base URL of the Nextcloud server
-        val serverUri = Uri.parse("https://ncld.ips.biba.uni-bremen.de/")
+        cloudService = sharedPref.getString("cloud_preference", "")!!
 
-        // Create client object to perform remote operations
-        val mClient = OwnCloudClientFactory.createOwnCloudClient(serverUri, this, true)
-        // Set credentials for authorization
-        mClient.credentials = OwnCloudCredentialsFactory.newBasicCredentials(nextCloudUsername, nextCloudPassword)
-        // Set file properties to upload
-        val uploadOperation = UploadFileRemoteOperation(path, "newFolderPath/$fileName.jpg", "image/jpg", SimpleDateFormat("dd.MM.yyyy").format(Date()))
-        // Upload the file
-        uploadOperation.execute(mClient, this, mHandler)
+        if (cloudUsername == "") {
+            showToast("Please give a valid username in settings !")
+        } else {
+            if (cloudService == "Nextcloud") {
+
+                // Parse URI to the base URL of the Nextcloud server
+                val serverUri = Uri.parse("https://ncld.ips.biba.uni-bremen.de/")
+
+                // Create client object to perform remote operations
+                val mClient = OwnCloudClientFactory.createOwnCloudClient(serverUri, this, true)
+                // Set credentials for authorization
+                mClient.credentials = OwnCloudCredentialsFactory.newBasicCredentials(cloudUsername, cloudPassword)
+                // Set file properties to upload
+                val uploadOperation = UploadFileRemoteOperation(path, "assistant/$fileName.jpg", "image/jpg", SimpleDateFormat("dd.MM.yyyy").format(Date()))
+                // Upload the file
+                uploadOperation.execute(mClient, this, mHandler)
+
+            }
+            if (cloudService == "Firebase") {
+
+                //TODO: Sign in only once and sign out when needed.
+                signInToFirebase()
+                // Get a non-default Storage bucket
+                val storage = Firebase.storage("gs://quickstart-1595243332893.appspot.com")
+
+                // Create a storage reference from our app
+                val storageRef = storage.reference
+
+                // Give the name to file
+                val assistantRef = storageRef.child("assistant/$fileName")
+                val stream = FileInputStream(File(path))
+
+                // Upload the image to storage
+                val uploadTask = assistantRef.putStream(stream)
+                uploadTask.addOnFailureListener { e ->
+                    // Handle unsuccessful uploads
+                    showToast(e.message.toString())
+                }.addOnSuccessListener {
+                    // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+                    // ...
+                    showToast("Image is uploaded successfully")
+                }
+
+            }
+
+        }
     }
 
     /**
@@ -715,8 +784,8 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
         maximumRetries = Integer.parseInt(sharedPref.getString("maximumRetries", "1")!!)
 
         // get next cloud username and password
-        nextCloudUsername = sharedPref.getString("nextcloud_username", "")!!
-        nextCloudPassword = sharedPref.getString("nextcloud_password", "")!!
+        cloudUsername = sharedPref.getString("cloud_username", "")!!
+        cloudPassword = sharedPref.getString("cloud_password", "")!!
 
     }
 
@@ -771,7 +840,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
                     showToast("Image is uploaded successfully")
                 } else {
                     // TODO: Fix 500:Internal server error
-                    showToast("Something went wrong with upload ! ")
+                    showToast("Something went wrong with upload ! Check username and password or internet connection")
 
                 }
             }
