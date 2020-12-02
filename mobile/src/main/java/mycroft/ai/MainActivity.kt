@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
@@ -264,9 +264,6 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     private fun signInToFirebase() {
         // Initialize Firebase Auth
         auth = Firebase.auth
-
-
-        showToast("Signing in for $cloudUsername")
 
         auth.signInWithEmailAndPassword(cloudUsername, cloudPassword)
                 .addOnCompleteListener(this) { task ->
