@@ -160,4 +160,7 @@
     <string name="uploads">Uploads</string>
     <string name="images">Images</string>
 
+    <string name="host_name_summary">Please insert host name here</string>
+    <string name="host_name_title">Hostname for Nextcloud</string>
+
 </resources>

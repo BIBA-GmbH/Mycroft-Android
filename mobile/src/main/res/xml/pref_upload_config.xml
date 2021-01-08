@@ -42,5 +42,12 @@
         android:singleLine="true"
         android:summary="@string/pref_cloud_password_summary"
         android:title="@string/pref_title_cloud_password" />
+    <EditTextPreference
+        android:key="cloud_host_name"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:defaultValue="https://ncld.ips.biba.uni-bremen.de/"
+        android:summary="@string/host_name_summary"
+        android:title="@string/host_name_title" />
 
 </PreferenceScreen>

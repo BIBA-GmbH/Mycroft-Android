@@ -110,6 +110,8 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     private lateinit var cloudUsername: String
     private lateinit var cloudPassword: String
     private lateinit var cloudService: String
+    private lateinit var cloudHostName: String
+
 
     private lateinit var auth: FirebaseAuth
 
@@ -293,13 +295,16 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
 
         cloudService = sharedPref.getString("cloud_preference", "")!!
 
+        // Cloud host name for Nextcloud
+        cloudHostName = sharedPref.getString("cloud_host_name", "")!!
+
         if (cloudUsername == "") {
             showToast("Please give a valid username in settings !")
         } else {
             if (cloudService == "Nextcloud") {
 
                 // Parse URI to the base URL of the Nextcloud server
-                val serverUri = Uri.parse("https://ncld.ips.biba.uni-bremen.de/")
+                val serverUri = Uri.parse(cloudHostName)
 
                 // Create client object to perform remote operations
                 val mClient = OwnCloudClientFactory.createOwnCloudClient(serverUri, this, true)
@@ -783,6 +788,9 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
         // get next cloud username and password
         cloudUsername = sharedPref.getString("cloud_username", "")!!
         cloudPassword = sharedPref.getString("cloud_password", "")!!
+
+        cloudHostName = sharedPref.getString("cloud_host_name", "")!!
+
 
     }
 
