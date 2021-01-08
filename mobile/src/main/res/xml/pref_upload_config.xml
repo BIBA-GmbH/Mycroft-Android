@@ -22,20 +22,25 @@
 
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+
+    <ListPreference
+        android:defaultValue="Nextcloud"
+        android:entries="@array/cloud_preference_entries"
+        android:entryValues="@array/cloud_preference_entries"
+        android:key="cloud_preference"
+        android:summary="@string/pref_cloud_service_summary"
+        android:title="@string/pref_title_cloud_service" />
     <EditTextPreference
-        android:inputType="textCapWords"
-        android:key="ip"
-        android:maxLines="1"
+        android:key="cloud_username"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:summary="@string/pref_default_display_ip"
-        android:title="@string/pref_title_default_ip" />
-
-    <SwitchPreference
-        android:key="appReaderSwitch"
-        android:title="@string/pref_title_app_reader_switch"
-        android:summary="@string/pref_summary_app_reader_switch"
-        android:defaultValue="true"/>
-
+        android:summary="@string/pref_cloud_username_summary"
+        android:title="@string/pref_title_cloud_username" />
+    <EditTextPreference
+        android:key="cloud_password"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_cloud_password_summary"
+        android:title="@string/pref_title_cloud_password" />
 
 </PreferenceScreen>
