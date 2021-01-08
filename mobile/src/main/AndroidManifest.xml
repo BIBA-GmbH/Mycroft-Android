@@ -81,6 +81,7 @@
                 android:value="mycroft.ai.MainActivity" />
         </activity>
         <activity android:name=".DiscoveryActivity" />
+        <activity android:name=".ConfigureImageUpload" />
 
         <meta-data
             android:name="com.google.android.gms.version"
