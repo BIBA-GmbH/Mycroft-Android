@@ -27,6 +27,12 @@
         android:title="@string/pref_header_general" />
 
     <header
+        android:fragment="mycroft.ai.SettingsActivity$UploadsPreferenceFragment"
+        android:icon="@drawable/mycroft_logo_24dp"
+        android:title="@string/uploads" />
+
+
+    <header
         android:fragment="mycroft.ai.SettingsActivity$AboutPreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"
         android:title="@string/pref_header_about" />
