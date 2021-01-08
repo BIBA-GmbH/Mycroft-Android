@@ -29,12 +29,9 @@ import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.preference.ListPreference
+import android.preference.*
 import android.preference.Preference
-import android.preference.PreferenceActivity
-import android.preference.PreferenceFragment
-import android.preference.PreferenceManager
-import android.preference.RingtonePreference
+import android.preference.Preference.OnPreferenceClickListener
 import android.text.TextUtils
 import android.view.MenuItem
 import androidx.core.app.NavUtils
@@ -104,6 +101,7 @@ class SettingsActivity : AppCompatPreferenceActivity() {
     override fun isValidFragment(fragmentName: String): Boolean {
         return (PreferenceFragment::class.java.name == fragmentName
                 || GeneralPreferenceFragment::class.java.name == fragmentName
+                || UploadsPreferenceFragment::class.java.name == fragmentName
                 || AboutPreferenceFragment::class.java.name == fragmentName)
     }
 
@@ -135,6 +133,24 @@ class SettingsActivity : AppCompatPreferenceActivity() {
             return super.onOptionsItemSelected(item)
         }
     }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    class UploadsPreferenceFragment : PreferenceFragment() {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            addPreferencesFromResource(R.xml.pref_upload)
+            setHasOptionsMenu(true)
+
+            val image_preference = findPreference("upload_settings")
+            image_preference.onPreferenceClickListener = OnPreferenceClickListener {
+                startActivity(Intent(activity, ConfigureImageUpload::class.java))
+                true
+            }
+
+        }
+
+    }
+
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     class AboutPreferenceFragment : PreferenceFragment() {
