@@ -580,7 +580,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     private fun deriveURI(): URI? {
         return if (wsct.isNotEmpty()) {
             try {
-                URI("ws://diamond-dev.ikap.biba.uni-bremen.de/mycroft/$wsct")
+                URI("ws://diamond-dev.ikap.biba.uni-bremen.de:83/mycroft/$wsct")
             } catch (e: URISyntaxException) {
                 Log.e(logTag, "Unable to connect to websocket with this token", e)
                 null
