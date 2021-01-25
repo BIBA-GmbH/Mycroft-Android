@@ -32,22 +32,26 @@ The app has had already a voice switch button (at the left bottom) that reads ou
 
 ### QR code scan
 
-This feature allows scanning of barcode (Code 128) and QR code by using camera of the device. A new button with a barcode icon is added to microphone input interface to start scan operation. When a barcode or QR code is placed into camera frame, scan is automatically performed.
+This feature allows scanning of barcode (Code 128) and QR code by using camera of the device. A new button with a barcode icon is added to microphone input interface, in order to start scan operation. When a barcode or QR code is placed into camera frame, scan is automatically performed.
 If scan works successfully, information of the barcode/QR code is sent to assistant. Otherwise user is informed with a message. This feature requires camera permission.
 
 ### Image upload
 
-Image upload feature adds a new interface to configure upload settings and a new button with an upload icon. Currently firebase and nextcloud cloud services are available to store images.
+Image upload feature adds a new interface to configure upload settings and a new button with an upload icon to perform uploads. Currently firebase and nextcloud cloud services are available to store images.
 Cloud service, username, password is configured in the upload settings interface ( Settings -> Uploads -> Images ).
-The upload button starts camera to capture and image. When image is captured and confirmed, image is uploaded to cloud service. If something goes wrong or image is uploaded successfully, user is informed with a message accordingly. This feature requires camera permission.
+The upload button starts camera to capture an image. When image is captured and confirmed, image is uploaded to cloud service. If something goes wrong or image is uploaded successfully, user is informed with a message accordingly. This feature requires camera permission.
 
 ### Silent utter messages
 
 This feature is added to mute messages like links, long product IDs and so. This feature is related to *chat with rasa* skill because messages are tagged with its type "write" or "speak". This feature hasn't been tested yet due to *chat with rasa* skill side implementation doesn't to seem to function well.
 
-### Client token (instead of using an IP to connect to a Mycroft instance)
+### Client token
 
 Client token feature modifies the existing implementation of Mycroft connection. Normally IP was needed to create connection to Mycroft instance. Now the app accepts client token instead of IP for convenience (Settings -> General -> Assistant client token) .
+
+### Clickable links
+
+Messages are received from assistant is shown in message cards as regular texts. This feature allows recognition of links in the messages. Links are now clickable and highlighted with a different color with this feature.
 
 ## To Install
 
