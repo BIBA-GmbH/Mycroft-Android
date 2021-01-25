@@ -32,7 +32,7 @@ import android.widget.Toast
 
 object GuiUtilities {
     fun showToast(context: Context, message: String) {
-        val toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
+        val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
 
         val layout = toast.view as LinearLayout
         if (layout.childCount > 0) {
