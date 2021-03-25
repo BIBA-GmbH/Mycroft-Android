@@ -24,7 +24,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="mycroft.ai.wear.MycroftDisplayActivity"
+    tools:context="coala.ai.wear.MycroftDisplayActivity"
     tools:deviceIds="wear">
 
     <TextView

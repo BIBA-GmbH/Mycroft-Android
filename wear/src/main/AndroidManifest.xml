@@ -19,7 +19,7 @@
   ~
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="mycroft.ai">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="coala.ai">
 
     <uses-feature android:name="android.hardware.type.watch" />
 
@@ -30,7 +30,7 @@
         android:theme="@android:style/Theme.DeviceDefault">
         <uses-library android:name="com.google.android.wearable" android:required="false" />
 
-        <activity android:name=".MainActivity" android:label="@string/app_name"
+        <activity android:name="coala.ai.MainActivity" android:label="@string/app_name"
             android:theme="@android:style/Theme.DeviceDefault.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

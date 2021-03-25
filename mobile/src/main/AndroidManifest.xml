@@ -20,7 +20,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="mycroft.ai">
+    package="coala.ai">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -41,7 +41,7 @@
         android:theme="@style/AppTheme">
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="mycroft.ai.fileprovider"
+            android:authorities="coala.ai.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -50,13 +50,13 @@
         </provider>
         <!-- The following activity sets screen orientation to portrait mode for scanner -->
         <activity
-            android:name=".CaptureActivityPortrait"
+            android:name="coala.ai.CaptureActivityPortrait"
             android:screenOrientation="portrait"
             android:stateNotNeeded="true"
             android:theme="@style/zxing_CaptureTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".MainActivity"
+            android:name="coala.ai.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
@@ -73,15 +73,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SettingsActivity"
+            android:name="coala.ai.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="coala.ai.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="mycroft.ai.MainActivity" />
+                android:value="coala.ai.MainActivity" />
         </activity>
-        <activity android:name=".DiscoveryActivity" />
-        <activity android:name=".ConfigureImageUpload" />
+        <activity android:name="coala.ai.DiscoveryActivity" />
+        <activity android:name="coala.ai.ConfigureImageUpload" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -100,7 +100,7 @@
                 android:resource="@xml/mycroft_app_widget_info" />
         </receiver>
 
-        <service android:name=".services.MycroftWearListenerService">
+        <service android:name="coala.ai.services.MycroftWearListenerService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
 

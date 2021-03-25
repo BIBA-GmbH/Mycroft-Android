@@ -23,17 +23,12 @@ package layout
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.speech.RecognizerIntent
 import android.widget.RemoteViews
-import android.widget.Toast
 
-import java.util.Locale
-
-import mycroft.ai.MainActivity
-import mycroft.ai.R
+import coala.ai.MainActivity
+import coala.ai.R
 
 /**
  * Implementation of App Widget functionality.
