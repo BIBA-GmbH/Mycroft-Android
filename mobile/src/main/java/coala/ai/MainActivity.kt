@@ -837,7 +837,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
         }
     }
 
-    override fun onRemoteOperationFinish(operation: RemoteOperation?, result: RemoteOperationResult?) {
+    override fun onRemoteOperationFinish(operation: RemoteOperation<Any>, result: RemoteOperationResult<Any>) {
         if (operation is UploadFileRemoteOperation) {
             if (result != null) {
                 if (result.isSuccess) {
