@@ -1,0 +1,53 @@
+<!--
+  ~  Copyright (c) 2017. Mycroft AI, Inc.
+  ~
+  ~  This file is part of Mycroft-Android a client for Mycroft Core.
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+
+    <ListPreference
+        android:defaultValue="Nextcloud"
+        android:entries="@array/cloud_preference_entries"
+        android:entryValues="@array/cloud_preference_entries"
+        android:key="cloud_preference"
+        android:summary="@string/pref_cloud_service_summary"
+        android:title="@string/pref_title_cloud_service" />
+    <EditTextPreference
+        android:key="cloud_username"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_cloud_username_summary"
+        android:title="@string/pref_title_cloud_username" />
+    <EditTextPreference
+        android:key="cloud_password"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:summary="@string/pref_cloud_password_summary"
+        android:title="@string/pref_title_cloud_password" />
+    <EditTextPreference
+        android:key="cloud_host_name"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:defaultValue="https://ncld.ips.biba.uni-bremen.de/"
+        android:summary="@string/host_name_summary"
+        android:title="@string/host_name_title" />
+
+</PreferenceScreen>

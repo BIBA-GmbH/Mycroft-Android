@@ -52,6 +52,8 @@
         android:paddingEnd="16dp"
         >
         <TextView
+            android:autoLink="web"
+            android:textColorLink="@android:color/holo_red_dark"
             android:id="@+id/utterance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

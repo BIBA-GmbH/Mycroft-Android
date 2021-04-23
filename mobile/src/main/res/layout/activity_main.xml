@@ -28,7 +28,7 @@
     android:src="@drawable/mycroft_big"
     android:scaleType = "centerCrop"
     app:statusBarBackground="@color/colorPrimary"
-    tools:context="mycroft.ai.MainActivity">
+    tools:context="coala.ai.MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

@@ -21,7 +21,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="mycroft.ai.MainActivity">
+    tools:context="coala.ai.MainActivity">
 
     <item
         android:id="@+id/action_home_mycroft_ai"
