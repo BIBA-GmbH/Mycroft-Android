@@ -1,0 +1,38 @@
+<!--
+  ~  Copyright (c) 2017. Mycroft AI, Inc.
+  ~
+  ~  This file is part of Mycroft-Android a client for Mycroft Core.
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <Preference
+        android:key="versionName"
+        android:title="@string/version_name_title"
+        android:defaultValue="@string/digit_zero" />
+
+    <Preference
+        android:key="versionCode"
+        android:title="@string/version_code_title"
+        android:defaultValue="@string/pref_default_display_not_set"/>
+
+    <Preference
+        android:key="license"
+        android:title="@string/license_title"
+        android:defaultValue="@string/license_value"/>
+
+</PreferenceScreen>

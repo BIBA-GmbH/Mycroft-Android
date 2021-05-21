@@ -1,0 +1,166 @@
+<!--
+  ~  Copyright (c) 2017. Mycroft AI, Inc.
+  ~
+  ~  This file is part of Mycroft-Android a client for Mycroft Core.
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  ~
+  ~  You should have received a copy of the GNU General Public License
+  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<resources>
+    <string name="app_name">Mycroft</string>
+    <string name="action_settings">Settings</string>
+    <string name="mycroftai">Mycroft</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="mycroft_website_url">https://home.mycroft.ai</string>
+
+    <!-- Main Activity -->
+    <string name="voice_responses_switch_label">Voice Responses</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">General</string>
+
+    <string name="pref_title_social_recommendations">Enable social recommendations</string>
+    <string name="pref_description_social_recommendations">Recommendations for people to contact
+        based on your message history
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_default_ip">Assistant client token</string>
+    <string name="pref_default_display_ip">Please insert your token here</string>
+
+    <string name="pref_title_cloud_username">Cloud Username</string>
+    <string name="pref_cloud_username_summary">Please insert your cloud username here</string>
+
+    <string name="pref_title_cloud_password">Cloud Password</string>
+    <string name="pref_cloud_password_summary">Please insert your cloud password here</string>
+
+    <string name="pref_title_cloud_service">Cloud Service</string>
+    <string name="pref_cloud_service_summary">Select cloud service to upload image</string>
+
+    <string name="pref_title_app_reader_switch">Voice Responses</string>
+    <string name="pref_summary_app_reader_switch">enable TTS responses</string>
+
+    <string name="pref_title_display_app_reader_switch">Voice Responses</string>
+    <string name="pref_summary_display_app_reader_switch">display App Reader switch on main screen</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Context menu -->
+    <string name="action_resend">Resend</string>
+    <string name="action_copy">Copy</string>
+    <string name="action_share">Share</string>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Data &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequency</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="cloud_preference_entries">
+        <item>Nextcloud</item>
+        <item>Firebase</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System sync settings</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_new_message_notifications">New message notifications</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">Vibrate</string>
+
+    <string name="speech_prompt">Say something to Mycroft&#8230;</string>
+    <string name="send_utterance">Send utterance</string>
+    <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
+    <string name="websocket_connected">Connected to Mycroft!</string>
+    <string name="websocket_closed">Connection to Mycroft has closed! Please re-connect and check connection settings!</string>
+    <string name="websocket_error">Connection error! Please ensure Ezra is available and on the same network as your device!</string>
+
+    <string name="connect">Connect</string>
+    <string name="discover">Discover</string>
+    <string name="register">Register</string>
+    <string name="send">Send</string>
+
+    <string name="hello">Hello World!</string>
+    <string name="title">Hello Notification!</string>
+    <string name="notification_posted">Notification posted</string>
+    <string name="pref_default_maximum_retries">1</string>
+    <string name="pref_title_maximum_retries">Maximum Retries</string>
+    <string name="action_about">About</string>
+    <string name="action_home_mycroft_ai">Mycroft Management Website</string>
+    <string name="title_activity_about">About</string>
+    <string name="title_activity_home_mycroft_ai">Home.Mycroft.AI</string>
+    <string name="pref_header_about">About</string>
+    <string name="version_code_title">Version Code</string>
+    <string name="version_name_title">Version Name</string>
+    <string name="license_title">License</string>
+    <string name="license_value">GPLv3</string>
+    <string name="pref_default_display_not_set">not set</string>
+    <string name="digit_zero">0</string>
+    <string name="landing_default_message">Nothing to show yet.. your conversations with Mycroft will appear here</string>
+    <string name="uploads">Uploads</string>
+    <string name="images">Images</string>
+
+    <string name="host_name_summary">Please insert host name here</string>
+    <string name="host_name_title">Hostname for Nextcloud</string>
+
+</resources>
