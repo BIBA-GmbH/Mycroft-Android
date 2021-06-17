@@ -83,6 +83,20 @@ import java.net.URISyntaxException
 import java.text.SimpleDateFormat
 import java.util.*
 
+//keycloak integration
+import coala.ai.di.IKeycloakRest
+import coala.ai.di.KeycloakToken
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
+import coala.ai.storage.IOAuth2AccessTokenStorage
+import org.koin.android.ext.android.inject
+import java.util.*
+import coala.ai.activities.LoginActivity;
+import coala.ai.helper.Helper
+import coala.ai.token.RefreshTokenWorker.Companion.startPeriodicRefreshTokenTask
+
 class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemoteOperationListener {
     private val logTag = "Mycroft"
     private val utterances = mutableListOf<Utterance>()
@@ -118,12 +132,28 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     var webSocketClient: WebSocketClient? = null
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
+    //keycloak integration
+    val api by inject<IKeycloakRest>()
+    val storage by inject<IOAuth2AccessTokenStorage>()
+    private val AUTHORIZATION_REQUEST_CODE = 1
+
+
+//    override fun onBackPressed() {}
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         setContentView(R.layout.activity_main)
+
+//        startPeriodicRefreshTokenTask()
         setSupportActionBar(toolbar)
+
+        //check for refresh token expiration, if expired transfer user to login activity
+        if (Helper.isRefreshTokenExpired(storage.getStoredAccessToken()))
+            startActivityForResult(Intent(this, LoginActivity::class.java), AUTHORIZATION_REQUEST_CODE)
 
 
         loadPreferences()
@@ -429,11 +459,28 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
                         Uri.parse(getString(R.string.mycroft_website_url)))
                 startActivity(intent)
             }
+            // logout menu presentation
+            R.id.logout -> handleLogout()
         }
 
         return consumed && super.onOptionsItemSelected(item)
     }
 
+    @SuppressLint("CheckResult")
+    private fun handleLogout() {
+        val refreshToken = storage.getStoredAccessToken()!!.refreshToken!!
+        api.logout(Config.clientId, refreshToken)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    Toast.makeText(this, "logged out :)", Toast.LENGTH_LONG).show()
+                    storage.removeAccessToken()
+                    this@MainActivity.startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+                }, {
+                    it.printStackTrace()
+                    Toast.makeText(this@MainActivity, "Error: ${it.message}", Toast.LENGTH_LONG).show()
+                })
+    }
     override fun onContextItemSelected(item: MenuItem): Boolean {
         super.onContextItemSelected(item)
         if (item.itemId == R.id.user_resend) {
@@ -580,7 +627,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     private fun deriveURI(): URI? {
         return if (wsct.isNotEmpty()) {
             try {
-                URI("ws://diamond-dev.ikap.biba.uni-bremen.de:80/mycroft/$wsct")
+                URI("ws://${getResources().getString(R.string.websocket_mycroft_ip)}:${getResources().getString(R.string.websocket_mycroft_port)}/mycroft/$wsct")
             } catch (e: URISyntaxException) {
                 Log.e(logTag, "Unable to connect to websocket with this token", e)
                 null
@@ -851,4 +898,19 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
             }
         }
     }
+
+    /**
+     * When view resume, check if token has been expired. If token is expired request
+     * user to login again through keycloak by redirecting to the LoginActivity.
+     * @author Gina Chatzimarkaki
+     *
+     * @version  1.0
+     * @see LoginActivity
+     */
+    override fun onResume() {
+        super.onResume()
+        if (Helper.isRefreshTokenExpired(storage.getStoredAccessToken()))
+            startActivityForResult(Intent(this, LoginActivity::class.java), AUTHORIZATION_REQUEST_CODE)
+    }
+
 }

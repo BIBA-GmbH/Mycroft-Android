@@ -163,4 +163,9 @@
     <string name="host_name_summary">Please insert host name here</string>
     <string name="host_name_title">Hostname for Nextcloud</string>
 
+
+    <string name="websocket_mycroft_ip">192.168.3.73</string>
+    <string name="websocket_mycroft_port">7080</string>
+    <string name="login_redirect_text">COMPLETE AUTHENTICATION IN THE BROWSER</string>
+    <string name="login_btn_txt">LOG IN</string>
 </resources>
