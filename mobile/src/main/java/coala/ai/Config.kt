@@ -7,8 +7,8 @@ package coala.ai
  * @version  1.0
  */
 object Config {
-    const val clientId = "test-coala"
-    const val baseUrl = "https://coala-keycloak.euprojects.net/auth/realms/coala/protocol/openid-connect"
+    const val clientId = "client-dev"
+    const val baseUrl = "https://diamond-dev.ikap.biba.uni-bremen.de:30022/auth/realms/coala-dev/protocol/openid-connect"
 
     const val authenticationCodeUrl = "$baseUrl/auth"
     const val redirectUri = "mycroft://oauthresponse"

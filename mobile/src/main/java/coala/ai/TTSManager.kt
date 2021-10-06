@@ -23,6 +23,7 @@ package coala.ai
 import android.app.Activity
 import android.app.Service
 import android.content.Context
+import android.content.res.Resources
 import android.speech.tts.TextToSpeech
 import android.util.Log
 
@@ -61,11 +62,27 @@ class TTSManager {
      */
     private var mTTSListener: TTSListener? = null
 
+    private var result = 0
     var onInitListener: TextToSpeech.OnInitListener = TextToSpeech.OnInitListener { status ->
         if (status == TextToSpeech.SUCCESS) {
-            val result = mTts.setLanguage(Locale.US)
+            val lang = Resources.getSystem().configuration.locales.get(0).language
+            if(lang.contentEquals("en")){
+                 result = mTts.setLanguage(Locale.ENGLISH)
+            }else if (lang.contentEquals("nl")){
+             result = mTts.setLanguage(Locale("de_nl"))
+            }else if (lang.contentEquals("it")){
+                 result = mTts.setLanguage(Locale.ITALIAN)
+            }else if (lang.contentEquals("de")){
+                 result = mTts.setLanguage(Locale.GERMAN)
+            }else{
+                 result = mTts.setLanguage(Locale.US)
+            }
+
+
+
             isLoaded = true
             Log.i(TAG, "TTS initialized")
+
 
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 logError("This Language is not supported")

@@ -20,6 +20,7 @@
 
 package coala.ai
 
+//keycloak integration
 import android.Manifest.permission
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -27,13 +28,13 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothHeadset
 import android.content.*
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.preference.PreferenceManager
-import android.provider.MediaStore
 import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.Menu
@@ -44,14 +45,19 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
+import androidx.core.os.ConfigurationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import coala.ai.Constants.MycroftMobileConstants.VERSION_CODE_PREFERENCE_KEY
+import coala.ai.Constants.MycroftMobileConstants.VERSION_NAME_PREFERENCE_KEY
+import coala.ai.activities.LoginActivity
+import coala.ai.adapters.MycroftAdapter
+import coala.ai.di.IKeycloakRest
+import coala.ai.helper.Helper
+import coala.ai.receivers.NetworkChangeReceiver
+import coala.ai.shared.utilities.GuiUtilities
+import coala.ai.storage.IOAuth2AccessTokenStorage
+import coala.ai.utils.NetworkUtil
 import com.google.zxing.integration.android.IntentIntegrator
 import com.google.zxing.integration.android.IntentResult
 import com.owncloud.android.lib.common.OwnCloudClientFactory
@@ -61,41 +67,20 @@ import com.owncloud.android.lib.common.operations.OnRemoteOperationListener
 import com.owncloud.android.lib.common.operations.RemoteOperation
 import com.owncloud.android.lib.common.operations.RemoteOperationResult
 import com.owncloud.android.lib.resources.files.UploadFileRemoteOperation
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
-import coala.ai.Constants.MycroftMobileConstants.VERSION_CODE_PREFERENCE_KEY
-import coala.ai.Constants.MycroftMobileConstants.VERSION_NAME_PREFERENCE_KEY
-import coala.ai.adapters.MycroftAdapter
-import coala.ai.receivers.NetworkChangeReceiver
-import coala.ai.shared.utilities.GuiUtilities
-import coala.ai.shared.wear.Constants.MycroftSharedConstants.MYCROFT_WEAR_REQUEST
-import coala.ai.shared.wear.Constants.MycroftSharedConstants.MYCROFT_WEAR_REQUEST_KEY_NAME
-import coala.ai.shared.wear.Constants.MycroftSharedConstants.MYCROFT_WEAR_REQUEST_MESSAGE
-import coala.ai.utils.NetworkUtil
 import org.java_websocket.client.WebSocketClient
 import org.java_websocket.exceptions.WebsocketNotConnectedException
 import org.java_websocket.handshake.ServerHandshake
+import org.koin.android.ext.android.inject
 import java.io.File
-import java.io.FileInputStream
 import java.io.IOException
 import java.net.URI
 import java.net.URISyntaxException
 import java.text.SimpleDateFormat
 import java.util.*
-
-//keycloak integration
-import coala.ai.di.IKeycloakRest
-import coala.ai.di.KeycloakToken
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
-import coala.ai.storage.IOAuth2AccessTokenStorage
-import org.koin.android.ext.android.inject
-import java.util.*
-import coala.ai.activities.LoginActivity;
-import coala.ai.helper.Helper
-import coala.ai.token.RefreshTokenWorker.Companion.startPeriodicRefreshTokenTask
 
 class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemoteOperationListener {
     private val logTag = "Mycroft"
@@ -108,7 +93,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     private val cameraPermissionRequestCode = 1
 
     private var isNetworkChangeReceiverRegistered = false
-    private var isWearBroadcastRevieverRegistered = false
+   // private var isWearBroadcastRevieverRegistered = false
     private var launchedFromWidget = false
     private var autoPromptForSpeech = false
 
@@ -127,10 +112,10 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     private lateinit var cloudHostName: String
 
 
-    private lateinit var auth: FirebaseAuth
+   // private lateinit var auth: FirebaseAuth
 
     var webSocketClient: WebSocketClient? = null
-    private var mFirebaseAnalytics: FirebaseAnalytics? = null
+   // private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
     //keycloak integration
     val api by inject<IKeycloakRest>()
@@ -145,7 +130,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
+       // mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
         setContentView(R.layout.activity_main)
 
 //        startPeriodicRefreshTokenTask()
@@ -178,7 +163,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
                 utteranceInput.visibility = View.INVISIBLE
                 sendUtterance.visibility = View.INVISIBLE
                 scanButton.visibility = View.VISIBLE
-                uploadButton.visibility = View.VISIBLE
+               // uploadButton.visibility = View.VISIBLE
 
             } else {
                 // Switch to keyboard
@@ -186,7 +171,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
                 utteranceInput.visibility = View.VISIBLE
                 sendUtterance.visibility = View.VISIBLE
                 scanButton.visibility = View.INVISIBLE
-                uploadButton.visibility = View.INVISIBLE
+               // uploadButton.visibility = View.INVISIBLE
 
             }
         }
@@ -236,7 +221,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
         registerReceivers()
 
         // Set a click listener to a new button to upload images to cloud
-        uploadButton.setOnClickListener { dispatchTakePictureIntent() }
+//        uploadButton.setOnClickListener { dispatchTakePictureIntent() }
 
         // start the discovery activity (testing only)
         // startActivity(new Intent(this, DiscoveryActivity.class));
@@ -245,31 +230,31 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     /**
      * Starts the camera to take a picture and upload it to storage
      */
-    private fun dispatchTakePictureIntent() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
-            // Ensure that there's a camera activity to handle the intent
-            takePictureIntent.resolveActivity(packageManager)?.also {
-                // Create the File where the photo should go
-                val photoFile: File? = try {
-                    createImageFile()
-                } catch (ex: IOException) {
-                    // Error occurred while creating the File
-                    null
-                }
-                // Continue only if the File was successfully created
-                photoFile?.also {
-                    // Get and put the photo URI to intent to upload it in storage in onActivityResult
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                            this,
-                            BuildConfig.APPLICATION_ID + ".fileprovider",
-                            it
-                    )
-                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    startActivityForResult(takePictureIntent, requestImageCapture)
-                }
-            }
-        }
-    }
+//    private fun dispatchTakePictureIntent() {
+//        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+//            // Ensure that there's a camera activity to handle the intent
+//            takePictureIntent.resolveActivity(packageManager)?.also {
+//                // Create the File where the photo should go
+//                val photoFile: File? = try {
+//                    createImageFile()
+//                } catch (ex: IOException) {
+//                    // Error occurred while creating the File
+//                    null
+//                }
+//                // Continue only if the File was successfully created
+//                photoFile?.also {
+//                    // Get and put the photo URI to intent to upload it in storage in onActivityResult
+//                    val photoURI: Uri = FileProvider.getUriForFile(
+//                            this,
+//                            BuildConfig.APPLICATION_ID + ".fileprovider",
+//                            it
+//                    )
+//                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+//                    startActivityForResult(takePictureIntent, requestImageCapture)
+//                }
+//            }
+//        }
+//    }
 
 
     /**
@@ -293,24 +278,24 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
     }
 
 
-    private fun signInToFirebase() {
-        // Initialize Firebase Auth
-        auth = Firebase.auth
-
-        auth.signInWithEmailAndPassword(cloudUsername, cloudPassword)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Toast.makeText(baseContext, "Authentication failed. Check username and password",
-                                Toast.LENGTH_SHORT).show()
-                    }
-
-                }
-
-    }
+//    private fun signInToFirebase() {
+//        // Initialize Firebase Auth
+//        auth = Firebase.auth
+//
+//        auth.signInWithEmailAndPassword(cloudUsername, cloudPassword)
+//                .addOnCompleteListener(this) { task ->
+//                    if (task.isSuccessful) {
+//                        // Sign in success, update UI with the signed-in user's information
+//
+//                    } else {
+//                        // If sign in fails, display a message to the user.
+//                        Toast.makeText(baseContext, "Authentication failed. Check username and password",
+//                                Toast.LENGTH_SHORT).show()
+//                    }
+//
+//                }
+//
+//    }
 
 
     /**
@@ -346,32 +331,32 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
                 uploadOperation.execute(mClient, this, mHandler)
 
             }
-            if (cloudService == "Firebase") {
-
-                //TODO: Sign in only once and sign out when needed.
-                signInToFirebase()
-                // Get a non-default Storage bucket
-                val storage = Firebase.storage("gs://quickstart-1595243332893.appspot.com")
-
-                // Create a storage reference from our app
-                val storageRef = storage.reference
-
-                // Give the name to file
-                val assistantRef = storageRef.child("assistant/$fileName")
-                val stream = FileInputStream(File(path))
-
-                // Upload the image to storage
-                val uploadTask = assistantRef.putStream(stream)
-                uploadTask.addOnFailureListener { e ->
-                    // Handle unsuccessful uploads
-                    showToast(e.message.toString())
-                }.addOnSuccessListener {
-                    // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-                    // ...
-                    showToast("Image is uploaded successfully")
-                }
-
-            }
+//            if (cloudService == "Firebase") {
+//
+//                //TODO: Sign in only once and sign out when needed.
+//                signInToFirebase()
+//                // Get a non-default Storage bucket
+//                val storage = Firebase.storage("gs://quickstart-1595243332893.appspot.com")
+//
+//                // Create a storage reference from our app
+//                val storageRef = storage.reference
+//
+//                // Give the name to file
+//                val assistantRef = storageRef.child("assistant/$fileName")
+//                val stream = FileInputStream(File(path))
+//
+//                // Upload the image to storage
+//                val uploadTask = assistantRef.putStream(stream)
+//                uploadTask.addOnFailureListener { e ->
+//                    // Handle unsuccessful uploads
+//                    showToast(e.message.toString())
+//                }.addOnSuccessListener {
+//                    // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+//                    // ...
+//                    showToast("Image is uploaded successfully")
+//                }
+//
+//            }
 
         }
     }
@@ -404,6 +389,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
      */
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
             cameraPermissionRequestCode -> {
                 // If request is cancelled, the result arrays are empty.
@@ -512,7 +498,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
         if (utterance != "") {
             // Send utterance and clear input frame for next time
             sendMessage(utterance)
-            utteranceInput.text.clear()
+            utteranceInput.text?.clear()
         }
     }
 
@@ -526,7 +512,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
                 }
 
                 override fun onMessage(s: String) {
-                    // Log.i(TAG, s);
+                     Log.i("Msg received", s);
                     runOnUiThread(MessageParser(s, object : SafeCallback<Utterance> {
                         override fun call(param: Utterance) {
                             addData(param)
@@ -562,7 +548,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
 
     private fun registerReceivers() {
         registerNetworkReceiver()
-        registerWearBroadcastReceiver()
+       // registerWearBroadcastReceiver()
     }
 
     private fun registerNetworkReceiver() {
@@ -581,30 +567,30 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
         }
     }
 
-    private fun registerWearBroadcastReceiver() {
-        if (!isWearBroadcastRevieverRegistered) {
-            wearBroadcastReceiver = object : BroadcastReceiver() {
-                override fun onReceive(context: Context, intent: Intent) {
-                    val message = intent.getStringExtra(MYCROFT_WEAR_REQUEST_MESSAGE)
-                    // send to mycroft
-                    if (message != null) {
-                        Log.d(logTag, "Wear message received: [$message] sending to Mycroft")
-                        sendMessage(message)
-                    }
-                }
-            }
-
-            LocalBroadcastManager.getInstance(this).registerReceiver(wearBroadcastReceiver, IntentFilter(MYCROFT_WEAR_REQUEST))
-            isWearBroadcastRevieverRegistered = true
-        }
-    }
+//    private fun registerWearBroadcastReceiver() {
+//        if (!isWearBroadcastRevieverRegistered) {
+//            wearBroadcastReceiver = object : BroadcastReceiver() {
+//                override fun onReceive(context: Context, intent: Intent) {
+//                    val message = intent.getStringExtra(MYCROFT_WEAR_REQUEST_MESSAGE)
+//                    // send to mycroft
+//                    if (message != null) {
+//                        Log.d(logTag, "Wear message received: [$message] sending to Mycroft")
+//                        sendMessage(message)
+//                    }
+//                }
+//            }
+//
+//            LocalBroadcastManager.getInstance(this).registerReceiver(wearBroadcastReceiver, IntentFilter(MYCROFT_WEAR_REQUEST))
+//            isWearBroadcastRevieverRegistered = true
+//        }
+//    }
 
     private fun unregisterReceivers() {
         unregisterBroadcastReceiver(networkChangeReceiver)
-        unregisterBroadcastReceiver(wearBroadcastReceiver)
+       // unregisterBroadcastReceiver(wearBroadcastReceiver)
 
         isNetworkChangeReceiverRegistered = false
-        isWearBroadcastRevieverRegistered = false
+      //  isWearBroadcastRevieverRegistered = false
     }
 
     private fun unregisterBroadcastReceiver(broadcastReceiver: BroadcastReceiver) {
@@ -625,9 +611,13 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
      * @return a valid uri, or null
      */
     private fun deriveURI(): URI? {
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+
+        // get mycroft-core ip address
+        wsct = sharedPref.getString("ip", "")!!
         return if (wsct.isNotEmpty()) {
             try {
-                URI("ws://${getResources().getString(R.string.websocket_mycroft_ip)}:${getResources().getString(R.string.websocket_mycroft_port)}/mycroft/$wsct")
+                URI("wss://${resources.getString(R.string.websocket_mycroft_ip)}:${resources.getString(R.string.websocket_mycroft_port)}/mycroft/$wsct")
             } catch (e: URISyntaxException) {
                 Log.e(logTag, "Unable to connect to websocket with this token", e)
                 null
@@ -659,9 +649,15 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
             handler.postDelayed({
                 // Actions to do after 1 seconds
                 try {
-                    webSocketClient!!.send(json)
-                    addData(Utterance(msg, UtteranceFrom.USER))
+                    if(webSocketClient!=null){
+                        webSocketClient!!.send(json)
+                        addData(Utterance(msg, UtteranceFrom.USER))
+                    }else{
+                        showToast(resources.getString(R.string.authentication_code_missing))
+                    }
+
                 } catch (exception: WebsocketNotConnectedException) {
+                    Log.e(logTag, "Unable to connect to websocket.", exception)
                     showToast(resources.getString(R.string.websocket_closed))
                 }
             }, 1000)
@@ -765,14 +761,14 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
         super.onDestroy()
         ttsManager.shutDown()
         isNetworkChangeReceiverRegistered = false
-        isWearBroadcastRevieverRegistered = false
+       // isWearBroadcastRevieverRegistered = false
     }
 
     public override fun onStart() {
         super.onStart()
         recordVersionInfo()
         registerReceivers()
-        checkIfLaunchedFromWidget(intent)
+        //checkIfLaunchedFromWidget(intent)
     }
 
     public override fun onStop() {
@@ -811,7 +807,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
             // Make scan button visible when mic is activated
             scanButton.visibility = View.VISIBLE
             // Make upload button visible when mic is activated
-            uploadButton.visibility = View.VISIBLE
+          //  uploadButton.visibility = View.VISIBLE
 
         } else {
             // Switch to keyboard
@@ -821,7 +817,7 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
             // Make scan button invisible when keyboard is activated
             scanButton.visibility = View.INVISIBLE
             // Make upload button invisible when keyboard is activated
-            uploadButton.visibility = View.INVISIBLE
+          //  uploadButton.visibility = View.INVISIBLE
 
         }
 
@@ -841,26 +837,26 @@ class MainActivity : AppCompatActivity(), OnDatatransferProgressListener, OnRemo
 
     }
 
-    private fun checkIfLaunchedFromWidget(intent: Intent) {
-        val extras = getIntent().extras
-        if (extras != null) {
-            if (extras.containsKey("launchedFromWidget")) {
-                launchedFromWidget = extras.getBoolean("launchedFromWidget")
-                autoPromptForSpeech = extras.getBoolean("autoPromptForSpeech")
-            }
-
-            if (extras.containsKey(MYCROFT_WEAR_REQUEST_KEY_NAME)) {
-                Log.d(logTag, "checkIfLaunchedFromWidget - extras contain key:$MYCROFT_WEAR_REQUEST_KEY_NAME")
-                extras.getString(MYCROFT_WEAR_REQUEST_KEY_NAME)?.let { sendMessage(it) }
-                getIntent().removeExtra(MYCROFT_WEAR_REQUEST_KEY_NAME)
-            }
-        }
-
-        if (autoPromptForSpeech) {
-            promptSpeechInput()
-            intent.putExtra("autoPromptForSpeech", false)
-        }
-    }
+//    private fun checkIfLaunchedFromWidget(intent: Intent) {
+//        val extras = getIntent().extras
+//        if (extras != null) {
+//            if (extras.containsKey("launchedFromWidget")) {
+//                launchedFromWidget = extras.getBoolean("launchedFromWidget")
+//                autoPromptForSpeech = extras.getBoolean("autoPromptForSpeech")
+//            }
+//
+//            if (extras.containsKey(MYCROFT_WEAR_REQUEST_KEY_NAME)) {
+//                Log.d(logTag, "checkIfLaunchedFromWidget - extras contain key:$MYCROFT_WEAR_REQUEST_KEY_NAME")
+//                extras.getString(MYCROFT_WEAR_REQUEST_KEY_NAME)?.let { sendMessage(it) }
+//                getIntent().removeExtra(MYCROFT_WEAR_REQUEST_KEY_NAME)
+//            }
+//        }
+//
+//        if (autoPromptForSpeech) {
+//            promptSpeechInput()
+//            intent.putExtra("autoPromptForSpeech", false)
+//        }
+//    }
 
     private fun recordVersionInfo() {
         try {

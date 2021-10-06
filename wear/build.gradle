@@ -47,9 +47,9 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    compileOnly 'com.google.android.wearable:wearable:2.4.0'
-    implementation 'com.google.android.support:wearable:2.4.0'
-    implementation 'com.google.android.gms:play-services-wearable:16.0.1'
+    compileOnly 'com.google.android.wearable:wearable:2.8.1'
+    implementation 'com.google.android.support:wearable:2.8.1'
+    implementation 'com.google.android.gms:play-services-wearable:17.1.0'
     implementation project(':shared')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }

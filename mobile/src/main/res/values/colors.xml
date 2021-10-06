@@ -20,8 +20,12 @@
   -->
 
 <resources>
-    <color name="colorPrimary">#22A7F0</color>
-    <color name="colorPrimaryDark">#4990e2</color>
-    <color name="colorAccent">#80c3f3</color>
-    <color name="colorUserCard">#E1F5FE</color>
+    <color name="colorPrimaryDark">#3D7654</color>
+    <color name="colorPrimary">#58BD7C</color>
+    <color name="colorAccent">#08BD54</color>
+    <color name="colorUserCard">#CEFFE455</color>
+    <color name="brown">#DE39310C</color>
+    <color name="white">#FFFF</color>
+    <color name="black">#000000</color>
+
 </resources>

@@ -129,8 +129,7 @@ class MainActivity : WearableActivity(), GoogleApiClient.ConnectionCallbacks, Go
 
                     val result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
-
-                    sendMessage(result[0])
+                    result?.get(0)?.let { sendMessage(it) }
                 }
             }
         }

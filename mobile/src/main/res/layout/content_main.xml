@@ -1,23 +1,3 @@
-<!--
-  ~  Copyright (c) 2017. Mycroft AI, Inc.
-  ~
-  ~  This file is part of Mycroft-Android a client for Mycroft Core.
-  ~
-  ~  This program is free software: you can redistribute it and/or modify
-  ~  it under the terms of the GNU General Public License as published by
-  ~  the Free Software Foundation, either version 3 of the License, or
-  ~  (at your option) any later version.
-  ~
-  ~  This program is distributed in the hope that it will be useful,
-  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  ~  GNU General Public License for more details.
-  ~
-  ~  You should have received a copy of the GNU General Public License
-  ~  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-  ~
-  -->
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -27,14 +7,22 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_marginTop="@dimen/card_list_margin_top"
+    android:background="@drawable/ic_background"
     tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/bgImage"
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/defaultMessageTextView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/mycroft_big"
-        android:alpha="0.2"/>
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/landing_default_message"
+        android:textAlignment="center"
+        android:padding="@dimen/_5sdp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cardList"
@@ -43,62 +31,48 @@
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/card_list_margin_top"
+        tools:listitem="@layout/mycroft_card_layout"
         android:layout_marginBottom="@dimen/card_list_margin_bottom" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/defaultMessageTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/action_section"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="80dp"
-        android:text="@string/landing_default_message"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
-        />
+
 
     <RelativeLayout
         android:id="@+id/action_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ToggleButton
+        <androidx.appcompat.widget.AppCompatToggleButton
             android:id="@+id/voxswitch2"
-            android:layout_width="24dp"
+            android:layout_width="@dimen/_28sdp"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="false"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="4dp"
+            android:layout_margin="@dimen/_4sdp"
             android:background="@android:color/transparent"
             android:button="@drawable/volume_toggle"
             android:checked="false"
             android:textOff=""
             android:textOn="" />
 
-        <ToggleButton
+        <androidx.appcompat.widget.AppCompatToggleButton
             android:id="@+id/voxswitch"
-            android:layout_width="24dp"
+            android:layout_width="@dimen/_28sdp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
-            android:layout_margin="4dp"
+            android:layout_margin="@dimen/_4sdp"
             android:background="@android:color/transparent"
             android:button="@drawable/volume_toggle"
             android:checked="false"
             android:textOff=""
             android:textOn="" />
 
-        <ToggleButton
+        <androidx.appcompat.widget.AppCompatToggleButton
             android:id="@+id/kbMicSwitch"
-            android:layout_width="24dp"
+            android:layout_width="@dimen/_28sdp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_margin="4dp"
+            android:layout_margin="@dimen/_4sdp"
             android:layout_toEndOf="@id/voxswitch"
             android:background="@android:color/transparent"
             android:button="@drawable/kb_to_mic"
@@ -106,17 +80,18 @@
             android:textOff=""
             android:textOn="" />
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/micButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            android:paddingEnd="@dimen/_5sdp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/speech_prompt"
-            android:src="@drawable/ic_mycroft" />
+            android:src="@drawable/mic_button" />
 
-        <EditText
+        <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/utteranceInput"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -126,10 +101,10 @@
             android:inputType="textShortMessage"
             android:visibility="invisible" />
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/sendUtterance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
             android:layout_alignParentEnd="false"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="4dp"
@@ -137,29 +112,30 @@
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="4dp"
             android:layout_toLeftOf="@id/voxswitch2"
-            android:background="@android:color/transparent"
             android:contentDescription="@string/send_utterance"
-            android:src="@drawable/ic_send_black_24dp"
+            android:src="@drawable/send_button"
             android:visibility="invisible" />
 
-        <ImageButton
+
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/scanButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:paddingStart="@dimen/_5sdp"
             android:layout_alignBottom="@id/micButton"
             android:layout_toEndOf="@id/micButton"
-            android:scaleType="fitCenter"
-            android:src="@drawable/barcode_icon" />
+            android:src="@drawable/qrcode" />
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/uploadButton"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
             android:layout_alignBaseline="@id/micButton"
             android:layout_alignParentBottom="true"
             android:layout_toEndOf="@id/scanButton"
             android:scaleType="fitCenter"
             android:src="@drawable/upload_icon"
+            android:visibility="invisible"
             tools:srcCompat="@drawable/upload_icon" />
 
     </RelativeLayout>

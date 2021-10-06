@@ -23,12 +23,12 @@
     <!-- These settings headers are only used on tablets. -->
     <header
         android:fragment="coala.ai.SettingsActivity$GeneralPreferenceFragment"
-        android:icon="@drawable/mycroft_logo_24dp"
+        android:icon="@drawable/ic_baseline_settings_24"
         android:title="@string/pref_header_general" />
 
     <header
         android:fragment="coala.ai.SettingsActivity$UploadsPreferenceFragment"
-        android:icon="@drawable/mycroft_logo_24dp"
+        android:icon="@drawable/upload"
         android:title="@string/uploads" />
 
 

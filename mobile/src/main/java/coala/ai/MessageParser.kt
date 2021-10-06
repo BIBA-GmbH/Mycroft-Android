@@ -35,7 +35,8 @@ import org.json.JSONObject
  * TODO: Add error-aware callback for cases where the message is malformed.
  *
  *
- * @author Philip Cohn-Cort
+ * @author Philip Cohn-Cort Version 1
+ * @author Stefan Wellsandt COALA extensions
  */
 internal class MessageParser(private val message: String,
                              private val callback: SafeCallback<Utterance>) : Runnable {
@@ -43,25 +44,24 @@ internal class MessageParser(private val message: String,
 
     override fun run() {
         Log.i(logTag, message)
-        // new format
-        // {"data": {"utterance": "There are only two hard problems in Computer Science: cache invalidation, naming things and off-by-one-errors."}, "type": "speak", "context": null}
+        // new format considering types, e.g. speak and write.
+        // {"data": {"utterance": "Text: text, text."}, "type": "speak", "context": null}
         try {
             val obj = JSONObject(message)
             if (obj.optString("type") == "speak") {
-                // Get the skill name to get the correct json key to have punctuations
-                val skill = Utterance(obj.getJSONObject("data").getJSONObject("meta").getString("skill"), UtteranceFrom.MYCROFT).utterance
-                // If skill is RasaSkill, punctuations comes with "dialog" key
-                if(skill == "RasaSkill" ){
-                    val ret = Utterance(obj.getJSONObject("data").getJSONObject("meta").getString("dialog"), UtteranceFrom.MYCROFT)
-                    callback.call(ret)
-                }else{
-                    // If it is any mycorft skill, "utterance" key is the one to be used because it doesn't have "dialog" key
-                    val ret = Utterance(obj.getJSONObject("data").getString("utterance"), UtteranceFrom.MYCROFT)
-                    callback.call(ret)
-                }
+                val ret = Utterance(
+                    obj.getJSONObject("data").getString("utterance"),
+                    UtteranceFrom.MYCROFT
+                )
+                Log.i("data",obj.getJSONObject("data").getString("utterance"))
+                callback.call(ret)
             }
-            if (obj.optString("type") == "write") {
-                val ret = Utterance(obj.getJSONObject("data").getString("utterance"), UtteranceFrom.MYCROFT, silent=true)
+            // when type is "write" utterance uses the "silent" flag.
+            else if (obj.optString("type") == "write") {
+                val ret = Utterance(obj.getJSONObject("data").getString("utterance"),
+                    UtteranceFrom.MYCROFT,
+                    silent=true
+                )
                 callback.call(ret)
             }
         } catch (e: JSONException) {
