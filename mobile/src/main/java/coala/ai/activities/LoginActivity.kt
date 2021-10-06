@@ -3,6 +3,7 @@ package coala.ai.activities
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.drawable.AnimationDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.os.ConfigurationCompat
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import coala.ai.Config.authenticationCodeUrl
 import coala.ai.Config.clientId
@@ -54,7 +56,7 @@ class LoginActivity : RxAppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState);
-        this.getSupportActionBar()?.hide()
+        this.supportActionBar?.hide()
         //set content view AFTER ABOVE sequence (to avoid crash)
         this.setContentView(R.layout.activity_login);
 
@@ -67,6 +69,7 @@ class LoginActivity : RxAppCompatActivity() {
         animationDrawable.setEnterFadeDuration(3000);
         animationDrawable.setExitFadeDuration(3000);
         animationDrawable.start();
+
 
         //authenticate user
         authenticate(intent.data)

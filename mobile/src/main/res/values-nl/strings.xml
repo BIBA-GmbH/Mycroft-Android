@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mycroft</string>
+    <string name="action_settings">Instellingen</string>
+    <string name="mycroftai">Mycroft</string>
+    <string name="title_activity_settings">Instellingen</string>
+    <string name="mycroft_website_url">https://home.mycroft.ai</string>
+
+    <!-- Main Activity -->
+    <string name="voice_responses_switch_label">Reacties</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">Algemeen</string>
+
+    <string name="pref_title_social_recommendations">Sociale aanbevelingen mogelijk maken</string>
+    <string name="pref_description_social_recommendations">Aanbevelingen voor mensen om te contacteren op basis van uw berichtengeschiedenis
+    </string>
+
+    <string name="pref_title_display_name">Naam weergeven</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_default_ip">Assistent-cliënttoken</string>
+    <string name="pref_default_display_ip">Vul hier uw penning in</string>
+
+    <string name="pref_title_cloud_username">Cloud Gebruikersnaam</string>
+    <string name="pref_cloud_username_summary">Vul hier uw cloud-gebruikersnaam in</string>
+
+    <string name="pref_title_cloud_password">Cloud wachtwoord</string>
+    <string name="pref_cloud_password_summary">Vul hier uw cloud wachtwoord in</string>
+
+    <string name="pref_title_cloud_service">Cloud Service</string>
+    <string name="pref_cloud_service_summary">Selecteer cloud service om afbeelding te uploaden</string>
+
+    <string name="pref_title_app_reader_switch">Reacties</string>
+    <string name="pref_summary_app_reader_switch">TTS-reacties mogelijk maken</string>
+
+    <string name="pref_title_display_app_reader_switch">Reacties</string>
+    <string name="pref_summary_display_app_reader_switch">App Reader schakelaar op hoofdscherm</string>
+
+
+    <string name="pref_title_add_friends_to_messages">Vrienden toevoegen aan berichten</string>
+    <string-array name="pref_example_list_titles">
+        <item>Altijd</item>
+        <item>Indien mogelijk</item>
+        <item>Nooit</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Context menu -->
+    <string name="action_resend">Opnieuw verzenden</string>
+    <string name="action_copy">Kopiëren</string>
+    <string name="action_share">Deel</string>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Gegevens &amp; sync</string>
+
+    <string name="pref_title_sync_frequency">Sync frequentie</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minuten</item>
+        <item>30 minuten</item>
+        <item>1 uur</item>
+        <item>3 uren</item>
+        <item>6 uren</item>
+        <item>Nooit</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Ingang 1</item>
+        <item>Ingang 2</item>
+        <item>Ingang 3</item>
+    </string-array>
+
+    <string-array name="cloud_preference_entries">
+        <item>Nextcloud</item>
+        <item>Firebase</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">Systeem synchronisatie instellingen</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Kennisgevingen</string>
+
+    <string name="pref_title_new_message_notifications">Kennisgevingen van nieuwe berichten</string>
+
+    <string name="pref_title_ringtone">Ringtone</string>
+    <string name="pref_ringtone_silent">Stil</string>
+
+    <string name="pref_title_vibrate">Trillen</string>
+
+    <string name="speech_prompt">Zeg iets tegen Mycroft&#8230;</string>
+    <string name="send_utterance">Verstuur uiting</string>
+    <string name="speech_not_supported">Sorry! Uw toestel ondersteunt geen spraakinvoer</string>
+    <string name="websocket_connected">Verbonden met Mycroft!</string>
+    <string name="websocket_closed">Verbinding met Mycroft is verbroken! Gelieve opnieuw te verbinden en controleer de verbindingsinstellingen!</string>
+    <string name="websocket_error">Verbindingsfout! Zorg ervoor dat Ezra beschikbaar is en zich op hetzelfde netwerk bevindt als uw toestel!</string>
+
+    <string name="connect">Connect</string>
+    <string name="discover">Ontdek</string>
+    <string name="register">Registreren</string>
+    <string name="send">Stuur</string>
+
+    <string name="hello">Hallo Wereld!</string>
+    <string name="title">Hello Notification!</string>
+    <string name="notification_posted">Kennisgeving geplaatst</string>
+    <string name="pref_default_maximum_retries">1</string>
+    <string name="pref_title_maximum_retries">Maximale herhalingen</string>
+    <string name="action_about">Over</string>
+    <string name="action_home_mycroft_ai">Mycroft Management Website</string>
+    <string name="title_activity_about">Over</string>
+    <string name="title_activity_home_mycroft_ai">Home.Mycroft.AI</string>
+    <string name="pref_header_about">Over</string>
+    <string name="version_code_title">Versie Code</string>
+    <string name="version_name_title">Version Naam</string>
+    <string name="license_title">Licentie</string>
+    <string name="license_value">GPLv3</string>
+    <string name="pref_default_display_not_set">niet ingesteld</string>
+    <string name="digit_zero">0</string>
+    <string name="landing_default_message">Nog niets te zien.. uw gesprekken met Mycroft zullen hier verschijnen</string>
+    <string name="uploads">Uploads</string>
+    <string name="images">Afbeeldingen</string>
+
+    <string name="host_name_summary">Vul hier de naam van de gastheer in</string>
+    <string name="host_name_title">Hostnaam for Nextcloud</string>
+
+    <!--TODO Not sure what this means, needs clarification in the docu -->
+<!--    <string name="websocket_mycroft_ip">diamond-dev.ikap.biba.uni-bremen.de</string>-->
+<!--    <string name="websocket_mycroft_port">443</string>-->
+    <string name="login_redirect_text">VOLLEDIGE AUTHENTICATIE IN DE BROWSER</string>
+    <string name="login_btn_txt">INLOGGEN</string>
+
+    <string name="authentication_code_missing">Socket niet verbonden! Controleer uw authenticatie token</string>
+    <string name="login_text">Uw fabrieksassistent</string>
+    <string name="log_out">Log uit</string>
+</resources>

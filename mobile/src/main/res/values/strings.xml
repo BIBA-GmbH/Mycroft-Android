@@ -59,6 +59,7 @@
     <string name="pref_title_display_app_reader_switch">Voice Responses</string>
     <string name="pref_summary_display_app_reader_switch">display App Reader switch on main screen</string>
 
+
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
     <string-array name="pref_example_list_titles">
         <item>Always</item>
@@ -164,8 +165,12 @@
     <string name="host_name_title">Hostname for Nextcloud</string>
 
     <!--TODO Not sure what this means, needs clarification in the docu -->
-    <string name="websocket_mycroft_ip">192.168.3.73</string>
-    <string name="websocket_mycroft_port">7080</string>
+    <string name="websocket_mycroft_ip" translatable="false">diamond-dev.ikap.biba.uni-bremen.de</string>
+    <string name="websocket_mycroft_port" translatable="false">443</string>
     <string name="login_redirect_text">COMPLETE AUTHENTICATION IN THE BROWSER</string>
     <string name="login_btn_txt">LOG IN</string>
+
+    <string name="authentication_code_missing">Socket not connected! check your authentication token</string>
+    <string name="login_text">Your Factory Assistant</string>
+    <string name="log_out">Log out</string>
 </resources>

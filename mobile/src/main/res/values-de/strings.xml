@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mycroft</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="mycroftai">Mycroft</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <string name="mycroft_website_url">https://home.mycroft.ai</string>
+
+    <!-- Main Activity -->
+    <string name="voice_responses_switch_label">Sprachliche Antworten</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">Allgemein</string>
+
+    <string name="pref_title_social_recommendations">Aktivieren Sie soziale Empfehlungen</string>
+    <string name="pref_description_social_recommendations">Empfehlungen für Personen, die Sie auf der Grundlage Ihrer Nachrichtenhistorie kontaktieren können
+    </string>
+
+    <string name="pref_title_display_name">Anzeigename</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_default_ip">Assistent Kunden-Token</string>
+    <string name="pref_default_display_ip">Bitte geben Sie hier Ihren Token ein</string>
+
+    <string name="pref_title_cloud_username">Cloud Benutzername</string>
+    <string name="pref_cloud_username_summary">Bitte geben Sie hier Ihren Cloud-Benutzernamen ein</string>
+
+    <string name="pref_title_cloud_password">Cloud Passwort</string>
+    <string name="pref_cloud_password_summary">Bitte geben Sie hier Ihr Cloud-Passwort ein</string>
+
+    <string name="pref_title_cloud_service">Cloud Dienst</string>
+    <string name="pref_cloud_service_summary">Cloud-Dienst zum Hochladen des Bildes auswählen</string>
+
+    <string name="pref_title_app_reader_switch">Sprachliche Antworten</string>
+    <string name="pref_summary_app_reader_switch">TTS-Antworten aktivieren</string>
+
+    <string name="pref_title_display_app_reader_switch">Sprachliche Antworten</string>
+    <string name="pref_summary_display_app_reader_switch">App Reader-Schalter auf dem Hauptbildschirm anzeigen</string>
+
+    <string name="pref_title_add_friends_to_messages">Freunde zu Nachrichten hinzufügen</string>
+    <string-array name="pref_example_list_titles">
+        <item>Immer</item>
+        <item>Wenn möglich</item>
+        <item>Niemals</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Context menu -->
+    <string name="action_resend">Erneut senden</string>
+    <string name="action_copy">Kopieren</string>
+    <string name="action_share">Teilen</string>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">Daten &amp; Synchronisierung</string>
+
+    <string name="pref_title_sync_frequency">Synchronisationsfrequenz</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 Minuten</item>
+        <item>30 Minuten</item>
+        <item>1 Stunde</item>
+        <item>3 Stunden</item>
+        <item>6 Stunden</item>
+        <item>Niemals</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Eintrag 1</item>
+        <item>Eintrag 2</item>
+        <item>Eintrag 3</item>
+    </string-array>
+
+    <string-array name="cloud_preference_entries">
+        <item>Nextcloud</item>
+        <item>Firebase</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">System-Synchronisationseinstellungen</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Benachrichtigungen</string>
+
+    <string name="pref_title_new_message_notifications">Benachrichtigungen über neue Nachrichten</string>
+
+    <string name="pref_title_ringtone">Klingelton</string>
+    <string name="pref_ringtone_silent">Stumm</string>
+
+    <string name="pref_title_vibrate">Vibrieren</string>
+
+    <string name="speech_prompt">Sag etwas zu Mycroft&#8230;</string>
+    <string name="send_utterance">Äußerung senden</string>
+    <string name="speech_not_supported">Entschuldigung! Ihr Gerät unterstützt keine Spracheingabe</string>
+    <string name="websocket_connected">Verbunden mit Mycroft!</string>
+    <string name="websocket_closed">Die Verbindung zu Mycroft wurde geschlossen! Bitte stellen Sie die Verbindung erneut her und überprüfen Sie die Verbindungseinstellungen!</string>
+    <string name="websocket_error">Verbindungsfehler! Bitte stellen Sie sicher, dass Ezra verfügbar ist und sich im selben Netzwerk wie Ihr Gerät befindet!</string>
+
+    <string name="connect">Verbinden Sie</string>
+    <string name="discover">Entdecken Sie</string>
+    <string name="register">Register</string>
+    <string name="send">Senden Sie</string>
+
+    <string name="hello">Hallo Welt!</string>
+    <string name="title">Hallo Benachrichtigung!</string>
+    <string name="notification_posted">Benachrichtigung veröffentlicht</string>
+    <string name="pref_default_maximum_retries">1</string>
+    <string name="pref_title_maximum_retries">Maximale Wiederholungsversuche</string>
+    <string name="action_about">Über</string>
+    <string name="action_home_mycroft_ai">Mycroft Management Website</string>
+    <string name="title_activity_about">Über</string>
+    <string name="title_activity_home_mycroft_ai">Home.Mycroft.AI</string>
+    <string name="pref_header_about">Über</string>
+    <string name="version_code_title">Version Code</string>
+    <string name="version_name_title">Version Name</string>
+    <string name="license_title">Lizenz</string>
+    <string name="license_value">GPLv3</string>
+    <string name="pref_default_display_not_set">nicht festgelegt</string>
+    <string name="digit_zero">0</string>
+    <string name="landing_default_message">Noch nichts zu sehen..Ihre Unterhaltungen mit Mycroft werden hier erscheinen</string>
+    <string name="uploads">Uploads</string>
+    <string name="images">Bilder</string>
+
+    <string name="host_name_summary">Bitte geben Sie hier den Hostnamen ein</string>
+    <string name="host_name_title">Hostname für Nextcloud</string>
+
+    <!--TODO Not sure what this means, needs clarification in the docu -->
+<!--    <string name="websocket_mycroft_ip">diamond-dev.ikap.biba.uni-bremen.de</string>-->
+<!--    <string name="websocket_mycroft_port">443</string>-->
+    <string name="login_redirect_text">VOLLSTÄNDIGE AUTHENTIFIZIERUNG IM BROWSER</string>
+    <string name="login_btn_txt">ANMELDEN</string>
+
+    <string name="authentication_code_missing">Socket nicht verbunden! Prüfen Sie Ihr Authentifizierungstoken</string>
+    <string name="login_text">Ihr Fabrikassistent</string>
+    <string name="log_out">Abmelden</string>
+</resources>

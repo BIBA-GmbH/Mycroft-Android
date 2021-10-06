@@ -32,14 +32,10 @@ import android.widget.Toast
 
 object GuiUtilities {
     fun showToast(context: Context, message: String) {
-        val toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
-
-        val layout = toast.view as LinearLayout
-        if (layout.childCount > 0) {
-            val tv = layout.getChildAt(0) as TextView
-            tv.gravity = Gravity.CENTER_VERTICAL or Gravity.CENTER_HORIZONTAL
+         Toast.makeText(context, message, Toast.LENGTH_SHORT).also {
+            it.setGravity(Gravity.CENTER , 0, 0)
+            it.show()
         }
 
-        toast.show()
     }
 }
