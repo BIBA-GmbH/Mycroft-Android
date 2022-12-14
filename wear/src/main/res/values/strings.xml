@@ -19,7 +19,9 @@
   -->
 
 <resources>
-    <string name="app_name">Mycroft-Android</string>
-    <string name="speech_prompt">Say something to Mycroft&#8230;</string>
-    <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
+    <string name="tap_here">tap here</string>
+    <string name="to_ask">to ask</string>
+    <string name="speech_not_supported">speech_not_supported</string>
+    <string name="speech_prompt">speech_prompt</string>
+    <string name="button"></string>
 </resources>

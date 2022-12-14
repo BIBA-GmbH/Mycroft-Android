@@ -1,0 +1,307 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_marginTop="@dimen/card_list_margin_top"
+    android:background="@drawable/ic_background"
+    tools:context=".activities.MainActivity">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/defaultMessageTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/landing_default_message"
+        android:textAlignment="center"
+        android:padding="@dimen/_5sdp"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/cardList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/action_section"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:listitem="@layout/mycroft_card_layout" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/action_section"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_100sdp"
+        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/scanButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType="fitCenter"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:padding="@dimen/_8sdp"
+            android:background="@drawable/qrcode_button_selector"
+            app:layout_constraintBottom_toBottomOf="@id/guideline8"
+            app:layout_constraintEnd_toStartOf="@+id/guideline4"
+            app:layout_constraintHorizontal_bias="0.538"
+            app:layout_constraintStart_toStartOf="@+id/guideline3"
+            app:layout_constraintTop_toTopOf="@+id/guideline7"
+            app:layout_constraintVertical_bias="0.833" />
+
+        <androidx.appcompat.widget.AppCompatToggleButton
+            android:id="@+id/voxswitch"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:scaleType= "fitCenter"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/volume_toggle"
+            android:checked="false"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintBottom_toBottomOf="@id/guideline8"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/guideline7"
+            app:layout_constraintVertical_bias="1.0" />
+
+        <androidx.appcompat.widget.AppCompatToggleButton
+            android:id="@+id/kbMicSwitch"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:scaleType= "fitCenter"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@id/voxswitch"
+            android:background="@drawable/kb_to_mic"
+            android:checked="true"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintBottom_toBottomOf="@id/guideline8"
+            app:layout_constraintEnd_toStartOf="@+id/guideline3"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline2"
+            app:layout_constraintTop_toTopOf="@+id/guideline7"
+            app:layout_constraintVertical_bias="0.833" />
+
+        <androidx.appcompat.widget.AppCompatToggleButton
+            android:id="@+id/voxswitch2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:scaleType= "fitCenter"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/volume_toggle_user_selector"
+            android:checked="false"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintBottom_toBottomOf="@id/guideline8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline6"
+            app:layout_constraintTop_toTopOf="@+id/guideline7"
+            app:layout_constraintVertical_bias="0.833" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/sendUtterance"
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginRight="@dimen/_2sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
+            android:layout_toLeftOf="@id/voxswitch2"
+            android:contentDescription="@string/send_utterance"
+            android:src="@drawable/send_selector"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/voxswitch2"
+            app:layout_constraintStart_toEndOf="@+id/utteranceInput"
+            app:layout_constraintTop_toBottomOf="@+id/progress_view"
+            app:layout_constraintVertical_bias="0.123" />
+
+        <LinearLayout
+            android:id="@+id/progress_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                style="@style/SpinKitView.Wave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingStart="@dimen/_30sdp"
+                android:paddingEnd="@dimen/_10sdp"
+                android:visibility="visible"
+                app:SpinKit_Color="@color/colorUserCard"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/listen_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/listening"
+                android:textColor="@color/colorPrimary"
+                android:textSize="@dimen/_8ssp"
+                android:textStyle="italic" />
+
+        </LinearLayout>
+
+
+        <com.nightonke.boommenu.BoomMenuButton
+            android:id="@+id/conversation_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:bmb_buttonBottomMargin="@dimen/_91sdp"
+            app:bmb_buttonEnum="textOutsideCircle"
+            app:bmb_buttonLeftMargin="100dp"
+            app:bmb_buttonPlaceAlignmentEnum="buttonPlaceAlignment_br"
+            app:bmb_buttonRadius="@dimen/_9sdp"
+            app:bmb_buttonRightMargin="325dp"
+            app:bmb_buttonTopMargin="100dp"
+            app:bmb_highlightedColor="#ffe469"
+            app:bmb_normalColor="#B9BCBE"
+            app:bmb_shadowEffect="false"
+            app:layout_constraintBottom_toTopOf="@+id/guideline8"
+            app:layout_constraintEnd_toStartOf="@+id/guideline5"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toTopOf="@+id/guideline7"
+            app:layout_constraintVertical_bias="0.333" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/utteranceInput"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toStartOf="@id/sendUtterance"
+            android:layout_toEndOf="@id/kbMicSwitch"
+            android:inputType="textShortMessage"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/guideline7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progress_view" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/uploadButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:scaleType= "fitCenter"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@id/scanButton"
+            android:background="@drawable/upload_button_selector"
+            app:layout_constraintBottom_toBottomOf="@id/guideline8"
+            app:layout_constraintEnd_toStartOf="@+id/guideline6"
+            app:layout_constraintStart_toStartOf="@+id/guideline5"
+            app:layout_constraintTop_toTopOf="@+id/guideline7"
+            app:layout_constraintVertical_bias="0.833" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="Modes"
+            android:textSize="@dimen/_9sdp"
+            android:textColor="#B9BCBE"
+            android:layout_marginTop="@dimen/_7sdp"
+            app:layout_constraintBottom_toBottomOf="@id/guideline8"
+            app:layout_constraintDimensionRatio="2:1"
+            app:layout_constraintEnd_toStartOf="@+id/guideline5"
+            app:layout_constraintHorizontal_bias="0.481"
+            app:layout_constraintStart_toStartOf="@+id/guideline4"
+            app:layout_constraintTop_toBottomOf="@+id/conversation_menu"
+            app:layout_constraintVertical_bias="0.355" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.16" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.32" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.49" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.67" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.83" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.56" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.98" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

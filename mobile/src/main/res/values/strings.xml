@@ -19,10 +19,12 @@
   -->
 
 <resources>
-    <string name="app_name">Mycroft</string>
+    <string name="app_name">Coala</string>
     <string name="action_settings">Settings</string>
-    <string name="mycroftai">Mycroft</string>
+    <string name="mycroftai">Coala</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_signin">Sign in</string>
+    <string name="title_signup">Sign up</string>
     <string name="mycroft_website_url">https://home.mycroft.ai</string>
 
     <!-- Main Activity -->
@@ -55,6 +57,9 @@
 
     <string name="pref_title_app_reader_switch">Voice Responses</string>
     <string name="pref_summary_app_reader_switch">enable TTS responses</string>
+
+    <string name="pref_title_wake_word_switch">Activate Wake Word</string>
+    <string name="pref_summary_wake_word_switch">enable Wake Word to start STT </string>
 
     <string name="pref_title_display_app_reader_switch">Voice Responses</string>
     <string name="pref_summary_display_app_reader_switch">display App Reader switch on main screen</string>
@@ -129,7 +134,7 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
 
-    <string name="speech_prompt">Say something to Mycroft&#8230;</string>
+    <string name="speech_prompt">Say something to Coala&#8230;</string>
     <string name="send_utterance">Send utterance</string>
     <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
     <string name="websocket_connected">Connected to Mycroft!</string>
@@ -157,20 +162,45 @@
     <string name="license_value">GPLv3</string>
     <string name="pref_default_display_not_set">not set</string>
     <string name="digit_zero">0</string>
-    <string name="landing_default_message">Nothing to show yet.. your conversations with Mycroft will appear here</string>
+    <string name="landing_default_message_tap_here">tap here</string>
+    <string name="landing_default_message_to_ask">to ask</string>
+    <string name="landing_default_message">Here you will see your conversation with me. You can start by saying "connect me to analytics assistant"</string>
     <string name="uploads">Uploads</string>
+    <string name="about">About</string>
+    <string name="general_preferences">General</string>
     <string name="images">Images</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="already_account">Already have an account?</string>
+    <string name="new_user">Don\'t have an account?</string>
 
     <string name="host_name_summary">Please insert host name here</string>
     <string name="host_name_title">Hostname for Nextcloud</string>
 
     <!--TODO Not sure what this means, needs clarification in the docu -->
-    <string name="websocket_mycroft_ip" translatable="false">diamond-dev.ikap.biba.uni-bremen.de</string>
-    <string name="websocket_mycroft_port" translatable="false">443</string>
+    <!--  REQUIRED HIVEMIND CONNECTION CONFIGURATIONS  -->
+    <string name="pref_title_default_hivemind_name" translatable="false">Hivemind Name</string>
+    <string name="pref_default_hivemind_name" translatable="false">JarbasAndroid</string>
+    <string name="pref_title_default_hivemind_access_key" translatable="false">your key</string>
+    <string name="pref_default_hivemind_access_key" translatable="false">your key</string>
+    <string name="pref_title_default_hivemind_crypto_key" translatable="false">Hivemind Crypto Key</string>
+    <string name="pref_default_hivemind_crypto_key" translatable="false">your key</string>
+    <string name="pref_title_default_hivemind_ip" translatable="false">Hivemind IP</string>
+    <string name="pref_default_websocket_hivemind_ip" translatable="false">server name or ip</string>
+    <string name="pref_title_default_hivemind_port" translatable="false">Hivemind Port</string>
+    <string name="pref_default_websocket_hivemind_port" translatable="false">443</string>
+    <string name="pref_title_default_hivemind_path" translatable="false">Hivemind URI Path</string>
+    <string name="pref_default_websocket_hivemind_path" translatable="false">/hivemind/biba</string>
+    <string name="pref_title_default_hivemind_secured_websocket_connection" translatable="false">Hivemind Secured Connection</string>
+    <string name="pref_default_hivemind_secured_websocket_connection" translatable="false">true</string>
     <string name="login_redirect_text">COMPLETE AUTHENTICATION IN THE BROWSER</string>
     <string name="login_btn_txt">LOG IN</string>
 
-    <string name="authentication_code_missing">Socket not connected! check your authentication token</string>
+    <string name="authentication_code_missing">Socket not connected! check your authentication key</string>
     <string name="login_text">Your Factory Assistant</string>
     <string name="log_out">Log out</string>
+    <string name="listening">Listening...</string>
+    <string name="chat_history">Chat history</string>
 </resources>

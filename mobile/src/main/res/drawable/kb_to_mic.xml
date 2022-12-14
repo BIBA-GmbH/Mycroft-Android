@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:drawable="@drawable/ic_keyboard_black_24dp"
-        android:state_checked="true" />
+        android:drawable="@drawable/ic_keyboard_pressed"
+        android:state_checked="true"
+        android:state_pressed="true"/>
     <item
-        android:drawable="@drawable/ic_mic_black_24dp"
-        android:state_checked="false" />
+        android:drawable="@drawable/ic_keyboard"
+        android:state_checked="true"
+        android:state_pressed="false"/>
+    <item
+        android:drawable="@drawable/ic_mic_tabbar_pressed"
+        android:state_checked="false"
+        android:state_pressed="true"/>
+    <item
+        android:drawable="@drawable/ic_mic_tabbar"
+        android:state_checked="false"
+        android:state_pressed="false" />
 </selector>

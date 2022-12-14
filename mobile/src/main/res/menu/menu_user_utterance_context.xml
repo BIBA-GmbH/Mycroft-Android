@@ -24,11 +24,13 @@
 
     <item
         android:id="@+id/user_resend"
+        android:iconTint="@color/grey"
         android:title="@string/action_resend"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/user_copy"
+        android:iconTint="@color/grey"
         android:title="@string/action_copy"
         app:showAsAction="never" />
 </menu>

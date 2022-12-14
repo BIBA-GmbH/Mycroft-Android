@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fadeScrollbars="false"
+
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/defect_id"
+            android:layout_width="@dimen/_52sdp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text=" Defect ID"
+            android:paddingTop="@dimen/_2sdp"
+            android:paddingBottom="@dimen/_2sdp"
+            android:gravity="center"
+            android:textSize="@dimen/_11ssp"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/component"
+            android:layout_width="@dimen/_105sdp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/defect_id"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Involved component"
+            android:paddingTop="@dimen/_2sdp"
+            android:paddingBottom="@dimen/_2sdp"
+            android:paddingStart="@dimen/_2sdp"
+            android:gravity="center"
+            android:textSize="@dimen/_11ssp"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/defect"
+            android:layout_width="@dimen/_76sdp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/component"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Characteristic"
+            android:paddingTop="@dimen/_2sdp"
+            android:paddingBottom="@dimen/_2sdp"
+            android:paddingStart="@dimen/_2sdp"
+            android:textSize="@dimen/_11ssp"
+            android:gravity="center"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/severity"
+            android:layout_width="@dimen/_45sdp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/defect"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Severity"
+            android:paddingTop="@dimen/_2sdp"
+            android:paddingBottom="@dimen/_2sdp"
+            android:paddingStart="@dimen/_2sdp"
+            android:textSize="@dimen/_11ssp"
+            android:gravity="center"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/occurrence"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@+id/severity"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="Occurrences"
+            android:paddingTop="@dimen/_2sdp"
+            android:paddingBottom="@dimen/_2sdp"
+            android:paddingStart="@dimen/_2sdp"
+            android:textSize="@dimen/_11ssp"
+            android:background="@color/colorPrimaryDark"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
+
+<!--        <View-->
+<!--            android:id="@+id/header_border"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="@dimen/_1sdp"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            android:backgroundTint="@color/colorPrimaryDark"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/defect_id"-->
+<!--            android:background="@color/black"/>-->
+
+    <!-- Recycler view for populating data in a table format -->
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/table_recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/defect_id"
+            android:nestedScrollingEnabled="false"
+            tools:listitem="@layout/table_item_layout"
+            android:layout_margin="@dimen/_3sdp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</HorizontalScrollView>

@@ -24,8 +24,15 @@
     <color name="colorPrimary">#58BD7C</color>
     <color name="colorAccent">#08BD54</color>
     <color name="colorUserCard">#CEFFE455</color>
+    <color name="yellow">#F0F3EBC2</color>
     <color name="brown">#DE39310C</color>
     <color name="white">#FFFF</color>
     <color name="black">#000000</color>
+    <color name="blue">#142968</color>
+    <color name="grey">#EDECEC</color>
+    <color name="menu_grey">#B9BCBE</color>
+    <color name="card_grey">#F4F4F4</color>
+    <color name="colorButton">#A7A7A7</color>
+
 
 </resources>

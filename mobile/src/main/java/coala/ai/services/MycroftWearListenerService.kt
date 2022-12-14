@@ -29,7 +29,7 @@ import com.google.android.gms.wearable.MessageEvent
 import com.google.android.gms.wearable.Node
 import com.google.android.gms.wearable.WearableListenerService
 
-import coala.ai.MainActivity
+import coala.ai.activities.MainActivity
 import coala.ai.shared.wear.Constants.MycroftSharedConstants.MYCROFT_QUERY_MESSAGE_PATH
 import coala.ai.shared.wear.Constants.MycroftSharedConstants.MYCROFT_WEAR_REQUEST
 import coala.ai.shared.wear.Constants.MycroftSharedConstants.MYCROFT_WEAR_REQUEST_MESSAGE

@@ -5,6 +5,8 @@
     <string name="mycroftai">Mycroft</string>
     <string name="title_activity_settings">Instellingen</string>
     <string name="mycroft_website_url">https://home.mycroft.ai</string>
+    <string name="title_signin">Meld je aan</string>
+    <string name="title_signup">Aanmelden</string>
 
     <!-- Main Activity -->
     <string name="voice_responses_switch_label">Reacties</string>
@@ -38,6 +40,9 @@
 
     <string name="pref_title_display_app_reader_switch">Reacties</string>
     <string name="pref_summary_display_app_reader_switch">App Reader schakelaar op hoofdscherm</string>
+
+    <string name="pref_title_wake_word_switch">Activeer Wake Word</string>
+    <string name="pref_summary_wake_word_switch">activeer Wake Word om STT te starten </string>
 
 
     <string name="pref_title_add_friends_to_messages">Vrienden toevoegen aan berichten</string>
@@ -137,9 +142,19 @@
     <string name="license_value">GPLv3</string>
     <string name="pref_default_display_not_set">niet ingesteld</string>
     <string name="digit_zero">0</string>
-    <string name="landing_default_message">Nog niets te zien.. uw gesprekken met Mycroft zullen hier verschijnen</string>
+    <string name="landing_default_message_tap_here">tik hier</string>
+    <string name="landing_default_message_to_ask">om te vragen</string>
+    <string name="landing_default_message">Hier ziet u uw gesprek met mij. Je kunt beginnen met "verbind me met de analytische assistent"</string>
     <string name="uploads">Uploads</string>
     <string name="images">Afbeeldingen</string>
+    <string name="about">Over</string>
+    <string name="general_preferences">Algemeen</string>
+    <string name="sign_in">Meld je aan</string>
+    <string name="sign_up">Aanmelden</string>
+    <string name="email">E-mail</string>
+    <string name="password">Wachtwoord</string>
+    <string name="already_account">Heb je al een account?</string>
+    <string name="new_user">Heb je geen account?</string>
 
     <string name="host_name_summary">Vul hier de naam van de gastheer in</string>
     <string name="host_name_title">Hostnaam for Nextcloud</string>
@@ -153,4 +168,6 @@
     <string name="authentication_code_missing">Socket niet verbonden! Controleer uw authenticatie token</string>
     <string name="login_text">Uw fabrieksassistent</string>
     <string name="log_out">Log uit</string>
+    <string name="listening">Listening...</string>
+    <string name="chat_history">Chatgeschiedenis</string>
 </resources>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        android:key="versionName"
+        android:title="@string/version_name_title"
+        android:defaultValue="@string/digit_zero"
+        app:iconSpaceReserved="false"
+        />
+
+    <Preference
+        android:key="versionCode"
+        android:title="@string/version_code_title"
+        android:defaultValue="@string/pref_default_display_not_set"
+        app:iconSpaceReserved="false"/>
+
+
+    <Preference
+        android:key="license"
+        android:title="@string/license_title"
+        android:defaultValue="@string/license_value"
+        app:iconSpaceReserved="false">
+
+        <intent android:action="android.intent.action.VIEW"
+            android:data="https://www.gnu.org/licenses/gpl-3.0.en.html"/>
+
+    </Preference>
+
+</PreferenceScreen>

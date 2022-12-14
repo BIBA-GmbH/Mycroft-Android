@@ -5,6 +5,8 @@
     <string name="mycroftai">Mycroft</string>
     <string name="title_activity_settings">Einstellungen</string>
     <string name="mycroft_website_url">https://home.mycroft.ai</string>
+    <string name="title_signin">Eintragen</string>
+    <string name="title_signup">Registrieren</string>
 
     <!-- Main Activity -->
     <string name="voice_responses_switch_label">Sprachliche Antworten</string>
@@ -35,6 +37,9 @@
 
     <string name="pref_title_app_reader_switch">Sprachliche Antworten</string>
     <string name="pref_summary_app_reader_switch">TTS-Antworten aktivieren</string>
+
+    <string name="pref_title_wake_word_switch">Aktivieren Sie Wake Word</string>
+    <string name="pref_summary_wake_word_switch">Wake Word aktivieren, um STT zu starten </string>
 
     <string name="pref_title_display_app_reader_switch">Sprachliche Antworten</string>
     <string name="pref_summary_display_app_reader_switch">App Reader-Schalter auf dem Hauptbildschirm anzeigen</string>
@@ -136,9 +141,19 @@
     <string name="license_value">GPLv3</string>
     <string name="pref_default_display_not_set">nicht festgelegt</string>
     <string name="digit_zero">0</string>
-    <string name="landing_default_message">Noch nichts zu sehen..Ihre Unterhaltungen mit Mycroft werden hier erscheinen</string>
+    <string name="landing_default_message_tap_here">hier tippen</string>
+    <string name="landing_default_message_to_ask">zu fragen</string>
+    <string name="landing_default_message">Hier sehen Sie Ihr Gespräch mit mir. Sie können damit beginnen, indem Sie sagen: "Verbinden Sie mich mit dem analytischen Assistenten"</string>
     <string name="uploads">Uploads</string>
     <string name="images">Bilder</string>
+    <string name="about">Über</string>
+    <string name="general_preferences">Allgemein</string>
+    <string name="sign_in">Eintragen</string>
+    <string name="sign_up">Registrieren</string>
+    <string name="email">E-Mail</string>
+    <string name="password">Passwort</string>
+    <string name="already_account">Sie haben bereits ein Konto?</string>
+    <string name="new_user">Sie haben noch kein Konto?</string>
 
     <string name="host_name_summary">Bitte geben Sie hier den Hostnamen ein</string>
     <string name="host_name_title">Hostname für Nextcloud</string>
@@ -152,4 +167,6 @@
     <string name="authentication_code_missing">Socket nicht verbunden! Prüfen Sie Ihr Authentifizierungstoken</string>
     <string name="login_text">Ihr Fabrikassistent</string>
     <string name="log_out">Abmelden</string>
+    <string name="listening">Ich höre...</string>
+    <string name="chat_history">Chatverlauf</string>
 </resources>

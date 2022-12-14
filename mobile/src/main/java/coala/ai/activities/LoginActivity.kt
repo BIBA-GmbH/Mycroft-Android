@@ -3,26 +3,22 @@ package coala.ai.activities
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Resources
-import android.graphics.drawable.AnimationDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.widget.ImageView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.os.ConfigurationCompat
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
-import coala.ai.Config.authenticationCodeUrl
-import coala.ai.Config.clientId
-import coala.ai.Config.redirectUri
 import coala.ai.R
+import coala.ai.configuration.Config.authenticationCodeUrl
+import coala.ai.configuration.Config.clientId
+import coala.ai.configuration.Config.redirectUri
 import coala.ai.di.IKeycloakRest
 import coala.ai.di.KeycloakToken
+import coala.ai.helper.Helper.parseJwtToken
+import coala.ai.helper.SharedPreferenceManager
 import coala.ai.storage.IOAuth2AccessTokenStorage
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
@@ -45,6 +41,8 @@ class LoginActivity : RxAppCompatActivity() {
     private val api by inject<IKeycloakRest>()
     /* The keycloak storage */
     private val storage by inject<IOAuth2AccessTokenStorage>()
+    /* App Settings - Preferences*/
+    private var sharedPreferenceManager: SharedPreferenceManager? = null
 
     /* The auth code url for keycloak*/
     private val authCodeUrl = Uri.parse(authenticationCodeUrl)
@@ -55,21 +53,11 @@ class LoginActivity : RxAppCompatActivity() {
         .build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState)
+        sharedPreferenceManager = SharedPreferenceManager.getInstance(this)
         this.supportActionBar?.hide()
         //set content view AFTER ABOVE sequence (to avoid crash)
-        this.setContentView(R.layout.activity_login);
-
-        //style animation for splash screen
-        val logo:ImageView = findViewById(R.id.logo);
-        val aniFade: Animation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fade_in);
-        logo.startAnimation(aniFade);
-        val layout:ConstraintLayout = findViewById(R.id.login_activity);
-        val animationDrawable:AnimationDrawable = layout.getBackground() as AnimationDrawable;
-        animationDrawable.setEnterFadeDuration(3000);
-        animationDrawable.setExitFadeDuration(3000);
-        animationDrawable.start();
-
+        this.setContentView(R.layout.activity_login)
 
         //authenticate user
         authenticate(intent.data)
@@ -162,8 +150,26 @@ class LoginActivity : RxAppCompatActivity() {
             token.tokenExpirationDate = expirationDate
             token.refreshTokenExpirationDate = refreshExpirationDate
             storage.storeAccessToken(token)
+            // store username to app general preferences to access it when sending messages for session id creation
+            sharedPreferenceManager?.putValue(
+                "username",
+                parseJwtToken(token.accessToken!!).preferred_username
+            )
+            val username = sharedPreferenceManager?.getString("username")
+
+            // TODO Commented the following lines to avoid redundant variable setting. The session time is set in MainActivity.kt
+            // editor.putInt("max_session_milliseconds", 120000)
             setResult(RESULT_OK)
-            finish()
+
+            if(isTaskRoot){
+                this@LoginActivity.startActivity(
+                    Intent(this@LoginActivity, MainActivity::class.java))
+                finish()
+            }
+            else{
+                finish()
+            }
+
         }
     }
 

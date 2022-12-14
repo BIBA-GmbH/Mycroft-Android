@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:133458571725:android:0ac6d39100cd2070915484",
         "android_client_info": {
-          "package_name": "mycroft.ai"
+          "package_name": "coala.ai"
         }
       },
       "oauth_client": [

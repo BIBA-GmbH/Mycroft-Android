@@ -111,14 +111,14 @@ object Helper {
 
             val body = String(Base64.decodeFast(base64EncodedBody))
             val jsonBody = Gson().fromJson(body, JsonObject::class.java)
-
             val userId = jsonBody.get("sub")?.asString
             val email = jsonBody.get("email")?.asString ?: "n/a"
             val name = jsonBody.get("given_name")?.asString ?: "n/a"
             val surname = jsonBody.get("family_name")?.asString ?: "n/a"
+            val preferred_username = jsonBody.get("preferred_username")?.asString ?: "n/a"
             val roles = jsonBody.get("realm_access")?.asJsonObject?.getAsJsonArray("roles")?.map {it.asString} ?: emptyList()
 
-            return Principal(userId, email, name, surname, roles)
+            return Principal(userId, email, name, surname, roles, preferred_username)
         }
     }
 }
@@ -134,5 +134,6 @@ data class Principal(
     val email: String? = null,
     val name: String? = null,
     val surname: String? = null,
-    val roles: List<String> = emptyList()
+    val roles: List<String> = emptyList(),
+    val preferred_username: String? = null
 )

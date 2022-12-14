@@ -3,7 +3,7 @@ package coala.ai.di
 import android.content.Context
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.SerializedName
-import coala.ai.Config.baseUrl
+import coala.ai.configuration.Config.baseUrl
 import coala.ai.storage.IOAuth2AccessTokenStorage
 import coala.ai.storage.SharedPreferencesOAuth2Storage
 import io.reactivex.Completable
@@ -11,6 +11,7 @@ import io.reactivex.Observable
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module.module
+
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory

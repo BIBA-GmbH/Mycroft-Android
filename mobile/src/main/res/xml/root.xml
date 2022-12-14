@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <Preference
+        app:title="@string/general_preferences"
+        android:icon="@drawable/ic_baseline_settings_24"
+        app:icon="@drawable/ic_baseline_settings_24"
+        app:fragment="coala.ai.activities.AppSettingsActivity$GeneralPreferencesFragment"/>
+
+    <Preference
+        app:title="@string/uploads"
+        app:icon="@drawable/upload"
+        app:fragment="coala.ai.activities.AppSettingsActivity$UploadsPreferencesFragment"/>
+
+    <Preference
+        app:title="@string/about"
+        app:icon="@drawable/ic_info_black_24dp"
+        app:fragment="coala.ai.activities.AppSettingsActivity$AboutPreferencesFragment"/>
+
+
+</PreferenceScreen>

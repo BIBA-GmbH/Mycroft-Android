@@ -21,18 +21,24 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="coala.ai.MainActivity">
+    tools:context="coala.ai.activities.MainActivity">
 
     <item
         android:id="@+id/action_home_mycroft_ai"
-        android:orderInCategory="100"
+        android:orderInCategory="98"
         android:title="@string/action_home_mycroft_ai"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
+        android:orderInCategory="99"
         android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_chat_history"
+        android:orderInCategory="100"
+        android:title="@string/chat_history"
         app:showAsAction="never" />
 
     <item

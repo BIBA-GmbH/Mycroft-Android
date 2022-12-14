@@ -27,8 +27,8 @@ package coala.ai.shared.wear
 class Constants {
     object MycroftSharedConstants {
         const val MYCROFT_QUERY_MESSAGE_PATH = "/mycroft_query"
-        const val MYCROFT_WEAR_REQUEST = "mycroft.ai.wear.request"
+        const val MYCROFT_WEAR_REQUEST = "coala.ai.wear.request"
         const val MYCROFT_WEAR_REQUEST_KEY_NAME = "MYCROFT_WEAR_REQUEST"
-        const val MYCROFT_WEAR_REQUEST_MESSAGE = "mycroft.ai.wear.request.message"
+        const val MYCROFT_WEAR_REQUEST_MESSAGE = "coala.ai.wear.request.message"
     }
 }

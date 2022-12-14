@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:padding="@dimen/_2sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/val_defect_id"
+        android:layout_width="@dimen/_52sdp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tool:text=" Defect ID"
+        android:gravity="center"
+        android:textSize="@dimen/_11ssp" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/val_component"
+        android:layout_width="@dimen/_105sdp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/val_defect_id"
+        app:layout_constraintTop_toTopOf="parent"
+        tool:text="Involved component"
+        android:gravity="center"
+        android:textSize="@dimen/_11ssp"/>
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/val_defect"
+        android:layout_width="@dimen/_74sdp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/val_component"
+        app:layout_constraintTop_toTopOf="parent"
+        tool:text="Characteristic"
+        android:gravity="center"
+        android:textSize="@dimen/_11ssp"/>
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/val_severity"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/val_defect"
+        app:layout_constraintTop_toTopOf="parent"
+        tool:text="Severity"
+        android:gravity="center"
+        android:textSize="@dimen/_11ssp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/val_occurrence"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@+id/val_severity"
+        app:layout_constraintTop_toTopOf="parent"
+        tool:text="Occurrences"
+        android:gravity="center"
+
+        android:textSize="@dimen/_11ssp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,7 +27,7 @@ import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
 
-import coala.ai.MainActivity
+import coala.ai.activities.MainActivity
 import coala.ai.R
 
 /**

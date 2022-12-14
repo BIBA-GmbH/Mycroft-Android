@@ -9,15 +9,17 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.NotificationCompat
 import androidx.work.*
 import androidx.work.ExistingPeriodicWorkPolicy.REPLACE
-import coala.ai.Config
+import coala.ai.configuration.Config
 import coala.ai.di.IKeycloakRest
 import coala.ai.di.KeycloakToken
 import coala.ai.helper.Helper.formatDate
 import coala.ai.storage.IOAuth2AccessTokenStorage
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
+
 import java.util.*
 import java.util.concurrent.TimeUnit.MINUTES
+
 
 /**
  * The refresh token worker.
@@ -29,7 +31,8 @@ import java.util.concurrent.TimeUnit.MINUTES
  * @author Gina Chatzimarkaki
  * @version  1.0
  */
-class RefreshTokenWorker(context: Context, params: WorkerParameters): Worker(context, params), KoinComponent {
+class RefreshTokenWorker(context: Context, params: WorkerParameters): Worker(context, params),
+    KoinComponent {
 
     companion object {
         fun startPeriodicRefreshTokenTask() {
@@ -96,7 +99,7 @@ class RefreshTokenWorker(context: Context, params: WorkerParameters): Worker(con
      */
     private fun triggerTokenNotification(id: Int) {
         val builder = NotificationCompat.Builder(applicationContext, channelId)
-            .setSmallIcon(R.drawable.notification_icon_background)
+            //.setSmallIcon(R.drawable.notification_icon_background)
             .setContentTitle("Coala")
             .setContentText("Updating token using refresh token...")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -118,7 +121,7 @@ class RefreshTokenWorker(context: Context, params: WorkerParameters): Worker(con
      */
     private fun showOk(id: Int, message: String) {
         val builder = NotificationCompat.Builder(applicationContext, channelId)
-            .setSmallIcon(R.drawable.notification_icon_background)
+            //.setSmallIcon(R.drawable.notification_icon_background)
             .setContentTitle("Coala")
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -139,7 +142,7 @@ class RefreshTokenWorker(context: Context, params: WorkerParameters): Worker(con
      */
     private fun showError(id: Int) {
         val builder = NotificationCompat.Builder(applicationContext, channelId)
-            .setSmallIcon(R.drawable.notification_icon_background)
+            //.setSmallIcon(R.drawable.notification_icon_background)
             .setContentTitle("Coala")
             .setContentText("Token refresh failed :(")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

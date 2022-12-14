@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditTextPreference
+        app:key="ip"
+        android:inputType="textCapWords"
+        app:maxLines="1"
+        android:selectAllOnFocus="true"
+        app:singleLine="true"
+        app:title="@string/pref_title_default_ip"
+        app:useSimpleSummaryProvider="true"
+        app:summary="@string/pref_default_display_ip"
+        app:dialogTitle="@string/pref_title_default_ip"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreference
+        app:key="appReaderSwitch"
+        app:title="@string/pref_title_app_reader_switch"
+        app:summary="@string/pref_summary_app_reader_switch"
+        app:defaultValue="true"
+        app:iconSpaceReserved="false"/>
+
+    <EditTextPreference
+        android:inputType="textCapWords"
+        app:key="hivemind_name"
+        app:maxLines="1"
+        android:selectAllOnFocus="true"
+        app:singleLine="true"
+        app:defaultValue="@string/pref_default_hivemind_name"
+        app:title="@string/pref_title_default_hivemind_name"
+        app:iconSpaceReserved="false"/>
+    <EditTextPreference
+        android:inputType="textCapWords"
+        app:key="hivemind_access_key"
+        app:maxLines="1"
+        android:selectAllOnFocus="true"
+        app:singleLine="true"
+        app:defaultValue="@string/pref_default_hivemind_access_key"
+        app:title="@string/pref_title_default_hivemind_access_key"
+        app:iconSpaceReserved="false"/>
+    <EditTextPreference
+        android:inputType="textCapWords"
+        app:key="hivemind_crypto_key"
+        app:maxLines="1"
+        android:selectAllOnFocus="true"
+        app:singleLine="true"
+        app:defaultValue="@string/pref_default_hivemind_crypto_key"
+        app:title="@string/pref_title_default_hivemind_crypto_key"
+        app:iconSpaceReserved="false"/>
+    <EditTextPreference
+        android:inputType="textCapWords"
+        app:key="hivemind_ip"
+        app:maxLines="1"
+        android:selectAllOnFocus="true"
+        app:singleLine="true"
+        app:defaultValue="@string/pref_default_websocket_hivemind_ip"
+        app:title="@string/pref_title_default_hivemind_ip"
+        app:iconSpaceReserved="false"/>
+    <EditTextPreference
+        android:inputType="textCapWords"
+        app:key="hivemind_port"
+        app:maxLines="1"
+        android:selectAllOnFocus="true"
+        app:singleLine="true"
+        app:defaultValue="@string/pref_default_websocket_hivemind_port"
+        app:title="@string/pref_title_default_hivemind_port"
+        app:iconSpaceReserved="false"/>
+
+    <EditTextPreference
+        android:inputType="textCapWords"
+        app:key="hivemind_path"
+        app:maxLines="1"
+        android:selectAllOnFocus="true"
+        app:singleLine="true"
+        app:defaultValue="@string/pref_default_websocket_hivemind_path"
+        app:title="@string/pref_title_default_hivemind_path"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreference
+        app:key="hivemind_secured_websocket_connection"
+        app:title="@string/pref_title_default_hivemind_secured_websocket_connection"
+        app:defaultValue="@string/pref_default_hivemind_secured_websocket_connection"
+        app:iconSpaceReserved="false"/>
+
+
+</PreferenceScreen>

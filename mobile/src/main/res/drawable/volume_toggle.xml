@@ -2,10 +2,21 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:drawable="@drawable/ic_volume_up_black_24dp"
+        android:drawable="@drawable/ic_volume"
+        android:state_pressed="false"
+        android:state_checked="true" />
+    <item
+        android:drawable="@drawable/ic_volume_pressed"
+        android:state_pressed="true"
         android:state_checked="true" />
 
     <item
-        android:drawable="@drawable/ic_volume_off_black_24dp"
+        android:drawable="@drawable/ic_volume_x"
+        android:state_pressed="false"
+        android:state_checked="false" />
+    <item
+        android:drawable="@drawable/ic_volume_x_pressed"
+        android:state_pressed="true"
         android:state_checked="false" />
 </selector>
+

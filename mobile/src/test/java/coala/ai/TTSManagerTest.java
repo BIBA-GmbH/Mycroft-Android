@@ -45,6 +45,8 @@ import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.when;
 
+import coala.ai.helper.TTSManager;
+
 /**
  * @author Philip Cohn-Cort
  */
